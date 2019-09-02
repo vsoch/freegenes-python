@@ -6,6 +6,9 @@ tags:
 description: How to interact with FreeGenes via Python
 ---
 
+Make sure that you've [installed FreeGenes]({{ site.baseurl }}/docs/getting-started/install)
+before moving forward.
+
 ## Environment Variables
 
 ### Token
@@ -63,6 +66,45 @@ When you create it, you can inspect it to see the version:
 [client][freegenes][0.0.0]
 ```
 
+## Client Shell
+
+The command line FreeGenes also offers a "shell" command that will get you
+started with a client. You again need to export the environment variables
+that you might need. If you don't:
+
+```bash
+$ freegenes shell
+ERROR You must provide a token or export FREEGENES_TOKEN.
+```
+
+When you do:
+
+```bash
+export FREEGENES_TOKEN=xxxxxxxxxxxx
+export FREEGENES_BASE=http://127.0.0.1
+$ freegenes shell
+
+Python 3.7.3 (default, Mar 27 2019, 22:11:17) 
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.4.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: client                                                                                                                            
+Out[1]: [client][freegenes][0.0.0]
+```
+
+You can use tab completion (with ipython) to see all the functions provided by 
+the client:
+
+```bash
+In [1]: client. 
+                base                get_containers()    get_modules()       get_parts()         get_protocols()    
+                get()               get_distributions() get_operations()    get_plans()         get_robots()       
+                get_authors()       get_entity()        get_orders()        get_plates()        headers            
+                get_collections()   get_institutions()  get_organisms()     get_platesets()     token        
+```
+
+These are endpoints, explained in further detail below.
+
 ## Basic Endpoints
 
 A basic endpoint is a function to get a single
@@ -77,4 +119,4 @@ will have more fields exposed than the listing.
 
 ## Functions
 
-
+**not yet written, need to get information from Keoni**

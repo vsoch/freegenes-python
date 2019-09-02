@@ -8,6 +8,8 @@
           url: "docs/getting-started/"
         - title: Install
           url: "docs/getting-started/install"
+        - title: Python Functions
+          url: "api"
     - title: "About"
       url: "about"
     - title: "News"

@@ -1,5 +1,7 @@
 include README.md LICENSE
 recursive-include freegenes *
 recursive-exclude * __pycache__
+recursive-exclude docs
+recursive-exclude .docs
 recursive-exclude * *.pyc
 recursive-exclude * *.pyo

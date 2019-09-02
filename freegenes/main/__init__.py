@@ -17,7 +17,7 @@ class Client(object):
 
     def __init__(self, token=None, base="https://freegenes.org"):
  
-        self.base = base.strip('/')
+        self._set_base(base)
         self._set_token(token)
         self._set_headers()
         self._test_token()
@@ -34,6 +34,13 @@ class Client(object):
         self.token = os.environ.get('FREEGENES_TOKEN', token)
         if not self.token:
             bot.exit("You must provide a token or export FREEGENES_TOKEN.")
+
+    def _set_base(self, base):
+        '''look for FREEGENES_BASE defined in environ
+        '''
+        self.base = os.environ.get('FREEGENES_BASE', base)
+        if self.base:
+            self.base = self.base.strip('/')
 
     def _set_headers(self):
         '''set the headers to the default, meaning we provide an

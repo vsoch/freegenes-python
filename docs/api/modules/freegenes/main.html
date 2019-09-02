@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>freegenes.main &mdash; FreeGenes Python API 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../assets/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../assets/documentation_options.js"></script>
+        <script type="text/javascript" src="../../assets/jquery.js"></script>
+        <script type="text/javascript" src="../../assets/underscore.js"></script>
+        <script type="text/javascript" src="../../assets/doctools.js"></script>
+        <script type="text/javascript" src="../../assets/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../assets/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../assets/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../assets/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> FreeGenes Python API
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../source/freegenes.html">freegenes package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">CHANGELOG</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">FreeGenes Python API</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>freegenes.main</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for freegenes.main</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">Copyright (C) 2019 Vanessa Sochat.</span>
+
+<span class="sd">This Source Code Form is subject to the terms of the</span>
+<span class="sd">Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed</span>
+<span class="sd">with this file, You can obtain one at http://mozilla.org/MPL/2.0/.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">freegenes.version</span> <span class="k">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">freegenes.logger</span> <span class="k">import</span> <span class="n">bot</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="s2">&quot;https://freegenes.org&quot;</span><span class="p">):</span>
+ 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_base</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_headers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_test_token</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;[client][freegenes][</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">__version__</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;[client][freegenes][</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">__version__</span>
+
+    <span class="k">def</span> <span class="nf">_set_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;ensure that token provided, or FREEGENES_TOKEN is defined in environ</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FREEGENES_TOKEN&#39;</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;You must provide a token or export FREEGENES_TOKEN.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_base</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;look for FREEGENES_BASE defined in environ</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FREEGENES_BASE&#39;</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;set the headers to the default, meaning we provide an</span>
+<span class="sd">           authorization token.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Token </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_test_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;test that the token works - this function also ensures</span>
+<span class="sd">           that the base is correct.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">requests</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Provided token is invalid.&#39;</span><span class="p">)</span>
+
+
+    <span class="c1"># Specific API calls</span>
+
+<div class="viewcode-block" id="Client.get"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paginate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;the default get, will use default headers if custom aren&#39;t defined.</span>
+<span class="sd">           we take a partial url (e.g., /api/authors) and then add the base.</span>
+
+<span class="sd">           Parameters</span>
+<span class="sd">           ==========</span>
+<span class="sd">           url: the url endpoint to query (without the http/s or domain)</span>
+<span class="sd">           headers: if defined, don&#39;t use default headers.</span>
+<span class="sd">           page: obtain a specific page of the result.</span>
+<span class="sd">           paginate: obtain all pages after query (default is True)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">heads</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span>
+        <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="c1"># If we are provided a page</span>
+        <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
+            <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">?page=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">fullurl</span><span class="p">,</span> <span class="n">page</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fullurl</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">heads</span><span class="p">)</span>
+
+        <span class="c1"># Return a successful response</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+ 
+            <span class="n">results</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+
+            <span class="c1"># Are there pages?</span>
+            <span class="k">if</span> <span class="n">paginate</span><span class="p">:</span>
+                <span class="k">while</span> <span class="n">response</span><span class="o">.</span><span class="n">next</span><span class="p">:</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="n">results</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">next</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">results</span>
+
+        <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Error with </span><span class="si">%s</span><span class="s2">, return value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">))</span></div>
+
+
+    <span class="c1"># Endpoints</span>
+
+<div class="viewcode-block" id="Client.get_entity"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_entity">[docs]</a>    <span class="k">def</span> <span class="nf">get_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;return a single entity if a uuid is provided, otherwise a list</span>
+
+<span class="sd">           Parameters</span>
+<span class="sd">           ==========</span>
+<span class="sd">           uuid: the unique resource identifier of the entity</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">uuid</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Client.get_authors"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_authors">[docs]</a>    <span class="k">def</span> <span class="nf">get_authors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_collections"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_collections">[docs]</a>    <span class="k">def</span> <span class="nf">get_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;collections&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_containers"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_containers">[docs]</a>    <span class="k">def</span> <span class="nf">get_containers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;containers&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_distributions"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_distributions">[docs]</a>    <span class="k">def</span> <span class="nf">get_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;distributions&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_institutions"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_institutions">[docs]</a>    <span class="k">def</span> <span class="nf">get_institutions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;institutions&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.getmodules"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.getmodules">[docs]</a>    <span class="k">def</span> <span class="nf">getmodules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_operations"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_operations">[docs]</a>    <span class="k">def</span> <span class="nf">get_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;operations&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_orders"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_orders">[docs]</a>    <span class="k">def</span> <span class="nf">get_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;orders&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_organisms"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_organisms">[docs]</a>    <span class="k">def</span> <span class="nf">get_organisms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;organisms&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_parts"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_parts">[docs]</a>    <span class="k">def</span> <span class="nf">get_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;parts&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_plans"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_plans">[docs]</a>    <span class="k">def</span> <span class="nf">get_plans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;plans&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_plates"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_plates">[docs]</a>    <span class="k">def</span> <span class="nf">get_plates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;plates&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_platesets"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_platesets">[docs]</a>    <span class="k">def</span> <span class="nf">get_platesets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;platesets&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_protocols"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_protocols">[docs]</a>    <span class="k">def</span> <span class="nf">get_protocols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;protocols&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_robots"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_robots">[docs]</a>    <span class="k">def</span> <span class="nf">get_robots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;robots&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Vanessa Sochat
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
