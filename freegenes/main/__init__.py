@@ -61,7 +61,7 @@ class Client(object):
 
     # Specific API calls
 
-    def get(url, headers=None, page=None, paginate=True):
+    def get(self, url, headers=None, page=None, paginate=True):
         '''the default get, will use default headers if custom aren't defined.
            we take a partial url (e.g., /api/authors) and then add the base.
 
@@ -83,7 +83,11 @@ class Client(object):
         # Return a successful response
         if response.status_code == 200:
  
-            results = response.json()['results']
+            results = response.json()
+
+            # Listings will have results, single entity not
+            if "results" in results:
+                results = results['results']
 
             # Are there pages?
             if paginate:
