@@ -8,7 +8,7 @@
           url: "docs/getting-started/"
         - title: Install
           url: "docs/getting-started/install"
-        - title: Python Client
+        - title: Client
           url: "docs/getting-started/python-client"
         - title: Python Functions
           url: "api"

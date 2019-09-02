@@ -6,10 +6,10 @@ tags:
 description: How to interact with FreeGenes via Python
 ---
 
+## Environment Variables
+
 Make sure that you've [installed FreeGenes]({{ site.baseurl }}/docs/getting-started/install)
 before moving forward.
-
-## Environment Variables
 
 ### Token
 
