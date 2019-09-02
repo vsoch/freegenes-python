@@ -115,7 +115,33 @@ For functions, see [the functions section](#functions) below.
 Let's explore all of the basic endpoints.  Generally, each model in FreeGenes (e.g., a Plate or Protocol) 
 has an endpoint to get details for a single entity, or to list
 many (paginated) entities. In the case of more complex models, the detail view
-will have more fields exposed than the listing.
+will have more fields exposed than the listing. For example:
+
+```python
+# Get a list, or single author
+> client.get_authors()
+> client.get_authors(uuid="xxxxxxxxxxx")
+
+> client.get_containers()
+> client.get_containers(uuid="xxxxxxxxxxx")
+```
+
+The above works for all of the following:
+
+```python
+> client.get_distributions()
+> client.get_collections()
+> client.get_institutions()
+> client.get_modules()
+> client.get_operations()
+> client.get_orders()
+> client.get_organisms()
+> client.get_parts()
+> client.get_plans()
+> client.get_plates()
+> client.get_protocols()
+> client.get_robots()
+```
 
 ## Functions
 
