@@ -15,6 +15,7 @@ information about FreeGenes, see [the FreeGenes documentation](https://vsoch.git
 ## User Guide
 
  - [Install]({{ site.baseurl }}/docs/getting-started/install): FreeGenes Python
+ - [Python Client]({{ site.baseurl }}/docs/getting-started/python-client): to interact with the API endpoints
 
 <hr>
 
