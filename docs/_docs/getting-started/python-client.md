@@ -24,9 +24,11 @@ export FREEGENES_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Base
 
-By default, FreeGenes will be looked for at https://freegenes.org. For local development,
-you might want to change this to `http://127.0.0.1`, or for the development server,
-`https://freegenes.dev`. You can do that easily by exporting `FREEGENES_BASE`:
+By default, since we only have a development server running, FreeGenes will be 
+looked for at `https://freegenes.dev`. When production is deployed, we might change this
+to `https://freegenes.org`, and then you would need to optionally specify the development
+server. For local development, you might want to change this to `http://127.0.0.1`. 
+You can do that easily by exporting `FREEGENES_BASE`:
 
 ```bash
 export FREEGENES_BASE=http://127.0.0.1

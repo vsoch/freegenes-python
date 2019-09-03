@@ -17,4 +17,5 @@ The client here will eventually be released as "freegenes"
 and the versions here will coincide with these releases.
 
 ## [master](https://github.com/vsoch/freegenes-python/tree/master)
+ - All basic endpoints added, along with client with shell (0.0.1)
  - skeleton of package while server under development (0.0.0)
