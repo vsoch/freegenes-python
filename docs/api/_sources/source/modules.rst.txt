@@ -1,7 +1,7 @@
-spython
-=======
+freegenes
+=========
 
 .. toctree::
    :maxdepth: 4
 
-   spython
+   freegenes

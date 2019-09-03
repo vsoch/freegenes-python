@@ -9,7 +9,6 @@ Subpackages
     freegenes.client
     freegenes.logger
     freegenes.main
-    freegenes.utils
 
 Submodules
 ----------

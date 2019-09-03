@@ -15,7 +15,7 @@ import os
 
 class Client(object):
 
-    def __init__(self, token=None, base="https://freegenes.org"):
+    def __init__(self, token=None, base="https://freegenes.dev"):
  
         self._set_base(base)
         self._set_token(token)

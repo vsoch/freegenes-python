@@ -29,7 +29,7 @@ def get_parser():
                         default=False, action='store_true')
 
     parser.add_argument('--version', dest="version", 
-                        help="show singularity and spython version", 
+                        help="show version and exit", 
                         default=False, action='store_true')
 
     subparsers = parser.add_subparsers(help='description',
