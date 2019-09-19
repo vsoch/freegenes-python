@@ -56,12 +56,11 @@ class Client(object):
             password = os.environ.get('FREEGENES_TWIST_PASSWORD')
 
             # username and password are required to get a token
-            if not username and password:
-                bot.error("You must provide token or export FREEGENES_TWIST_TOKEN.")
-                bot.exit("You must provide eutoken or export FREEGENES_TWIST_EUTOKEN.")
+            if not username or not password:
+                bot.exit("You must export FREEGENES_TWIST_TOKEN or FREEGENES_TWIST_LOGIN and FREEGENES_TWIST_PASSWORD")
 
             headers = {"username": username, "password": password}
-            response = requests.POST(self.base + '/api-token-auth/', headers=headers)
+            response = requests.post(self.base + '/api-token-auth/', headers=headers)
             if response.status_code != 201:
                 bot.exit("Error with authentication, %s:%s" %(response.reason, response.status_code))
             self.token = response.json()['token']

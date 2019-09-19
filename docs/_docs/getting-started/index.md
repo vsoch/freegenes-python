@@ -16,6 +16,7 @@ information about FreeGenes, see [the FreeGenes documentation](https://vsoch.git
 
  - [Install]({{ site.baseurl }}/docs/getting-started/install): FreeGenes Python
  - [Python Client]({{ site.baseurl }}/docs/getting-started/python-client): to interact with the API endpoints
+ - [Twist Client]({{ site.baseurl }}/docs/getting-started/twist-client): to interact with Twist API endpoints
 
 <hr>
 
