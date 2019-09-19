@@ -8,7 +8,12 @@ with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 '''
 
-from freegenes.main import Client
+from freegenes.main.twist import Client
+from .shell import (
+    ipython,
+    python,
+    run_bpython
+)
 
 def main(args, options, parser):
 
@@ -28,29 +33,3 @@ def main(args, options, parser):
             return lookup[shell](client)
         except ImportError:
             pass
-
-def ipython(client):
-    '''give the user an ipython shell
-    '''
-    try:
-        from IPython import embed
-    except ImportError:
-        return python()
-
-    embed(using=False)
-
-def run_bpython(client):
-    '''give the user a bpython shell
-    '''
-    try:
-        import bpython
-    except ImportError:
-        return python()
-
-    bpython.embed(locals_={'client': client})
-
-def python(client):
-    '''give the user a python shell
-    '''
-    import code
-    code.interact(local={"client":client})

@@ -1,5 +1,6 @@
 .gitvsoch
 freegenes.egg-info
+.twist
 .env
 __pycache__
 *.sif

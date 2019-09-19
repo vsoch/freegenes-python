@@ -36,8 +36,9 @@ def get_parser():
                                        title='actions',
                                        dest="command", metavar='general usage')
 
+    subparsers.add_parser("shell", help="Interact with freegenes python")
+    subparsers.add_parser("twist", help="Interact with twist API")
 
-    subparsers.add_parser("shell", help="Interact with singularity python")
     return parser
 
 
@@ -104,6 +105,8 @@ def main():
     # Does the user want help for a subcommand?
     if args.command == 'shell': 
         from .shell import main as func
+    elif args.command == 'twist': 
+        from .twist import main as func
     else:
         print_help()
 
