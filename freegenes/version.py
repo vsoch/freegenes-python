@@ -16,6 +16,7 @@ LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
     ('semver', {'min_version': '2.8.0'}),
+    ('requests', {'min_version': '2.21.0'}),
 )
 
 TESTS_REQUIRES = (
