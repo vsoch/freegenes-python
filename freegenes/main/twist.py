@@ -32,6 +32,7 @@ class Client(object):
         '''
         self.version = version
         self._set_base(base)
+        self._set_email(email)
         self._set_tokens(token, eutoken)
         self._set_headers()
         self._test_token()
@@ -71,6 +72,24 @@ class Client(object):
         self.base = os.environ.get('FREEGENES_TWIST_BASE', base)
         if self.base:
             self.base = self.base.strip('/')
+
+    def _get_email(self, email):
+        '''get an email (required) either provided by calling function or
+           already set in client. Exit if not defined.
+
+           Parameters
+           ==========
+           email: the email address associated with Twist
+        '''
+        email = email or self.email
+        if not email:
+            bot.exit("Email must provided to client, calling function, or in environment FREEGENES_TWIST_EMAIL.")
+        return email
+
+    def _set_email(self, email):
+        '''look for FREEGENES_TWIST_EMAIL defined in environ
+        '''
+        self.email = os.environ.get('FREEGENES_TWIST_EMAIL', email)
 
     def _set_headers(self):
         '''set the headers to the default, meaning we provide an
@@ -136,7 +155,12 @@ class Client(object):
         '''Returns the authentication APIClient username. 
            And email when EUT is supplied.
         '''
-        return self.get('/whoami/')
+        result = self.get('/whoami/')
+   
+        # If the client did not provide an email, try getting it
+        if not self.email and "email" in result:
+            self.email = result["email"]
+        return result
 
     def healthcheck(self):
         '''Returns the API healthcheck endpoint --> {'status': 'OK'}
@@ -188,19 +212,22 @@ class Client(object):
         '''
         return self.get('/v1/catalog-items')
 
-    def user(self, email):
+    def user(self, email=None):
         '''Look up user by email.
         '''
+        email = self._get_email(email)
         return self.get('/v1/users/%s/' % email)
 
     def user_addresses(self, email):
         '''Look up user by email.
         '''
+        email = self._get_email(email)
         return self.get('/v1/users/%s/addresses/' % email)
 
     def orders(self, email):
         '''Look up orders for a user based on email.
         '''
+        email = self._get_email(email)
         return self.get('/v1/users/%s/orders/' % email)
 
     # Orders
@@ -209,12 +236,14 @@ class Client(object):
         '''Look up order items for a user based on email 
            and the order sfdc_id.
         '''
+        email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/items' % (email, sfdc_id))
 
     def order_platemaps_by_barcode(self, email, sfdc_id, barcode):
         '''Look up order plate maps for a user based on email.
            sfdc_id and barcode.
         '''
+        email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
 
 
@@ -222,4 +251,5 @@ class Client(object):
         '''Look up order plate maps for a user based on email.
            sfdc_id and shipment id.
         '''
+        email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/shipments/%s/plate-maps' % (email, sfdc_id, shipment_id))
