@@ -35,7 +35,7 @@ def ipython(client):
     try:
         from IPython import embed
     except ImportError:
-        return python()
+        return python(client)
 
     embed(using=False)
 
@@ -45,7 +45,7 @@ def run_bpython(client):
     try:
         import bpython
     except ImportError:
-        return python()
+        return python(client)
 
     bpython.embed(locals_={'client': client})
 
