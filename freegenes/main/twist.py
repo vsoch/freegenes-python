@@ -32,10 +32,10 @@ class Client(object):
         '''
         self.version = version
         self._set_base(base)
-        self._set_email(email)
         self._set_tokens(token, eutoken)
         self._set_headers()
         self._test_token()
+        self._set_email(email)
 
     def __repr__(self):
         return self.__str__()
@@ -90,7 +90,9 @@ class Client(object):
         '''look for FREEGENES_TWIST_EMAIL defined in environ
         '''
         self.email = os.environ.get('FREEGENES_TWIST_EMAIL', email)
-
+        if not email:
+            self.whoami()
+        
     def _set_headers(self):
         '''set the headers to the default, meaning we provide an
            authorization token.
