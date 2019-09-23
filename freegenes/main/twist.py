@@ -211,15 +211,15 @@ class Client(object):
         '''
         return self.get('/v1/users/%s/orders/%s/items' % (email, sfdc_id))
 
-    def order_platemaps(self, email, sfdc_id, barcode):
+    def order_platemaps_by_barcode(self, email, sfdc_id, barcode):
         '''Look up order plate maps for a user based on email.
            sfdc_id and barcode.
         '''
         return self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
 
 
-    def order_platemaps(self, email, sfdc_id, barcode):
+    def order_platemaps_by_shipment(self, email, sfdc_id, shipment_id):
         '''Look up order plate maps for a user based on email.
-           sfdc_id and barcode.
+           sfdc_id and shipment id.
         '''
-        return self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
+        return self.get('/v1/users/%s/orders/%s/shipments/%s/plate-maps' % (email, sfdc_id, shipment_id))
