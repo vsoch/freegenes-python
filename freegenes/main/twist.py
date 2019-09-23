@@ -218,13 +218,13 @@ class Client(object):
         email = self._get_email(email)
         return self.get('/v1/users/%s/' % email)
 
-    def user_addresses(self, email):
+    def user_addresses(self, email=None):
         '''Look up user by email.
         '''
         email = self._get_email(email)
         return self.get('/v1/users/%s/addresses/' % email)
 
-    def orders(self, email):
+    def orders(self, email=None):
         '''Look up orders for a user based on email.
         '''
         email = self._get_email(email)
@@ -232,14 +232,14 @@ class Client(object):
 
     # Orders
 
-    def order_items(self, email, sfdc_id):
+    def order_items(self, sfdc_id, email=None):
         '''Look up order items for a user based on email 
            and the order sfdc_id.
         '''
         email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/items' % (email, sfdc_id))
 
-    def order_platemaps_by_barcode(self, email, sfdc_id, barcode):
+    def order_platemaps_by_barcode(self, sfdc_id, barcode, email=None):
         '''Look up order plate maps for a user based on email.
            sfdc_id and barcode.
         '''
@@ -247,7 +247,7 @@ class Client(object):
         return self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
 
 
-    def order_platemaps_by_shipment(self, email, sfdc_id, shipment_id):
+    def order_platemaps_by_shipment(self, sfdc_id, shipment_id, email=None):
         '''Look up order plate maps for a user based on email.
            sfdc_id and shipment id.
         '''
