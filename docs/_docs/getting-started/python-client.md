@@ -144,7 +144,3 @@ The above works for all of the following:
 > client.get_protocols()
 > client.get_robots()
 ```
-
-## Functions
-
-**not yet written, need to get information from Keoni**
