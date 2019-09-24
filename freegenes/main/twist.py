@@ -9,6 +9,7 @@ with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 '''
 
 from freegenes.version import __version__
+from freegenes.utils import str2csv
 from freegenes.logger import bot
 import requests
 import os
@@ -241,17 +242,41 @@ class Client(object):
         email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/items' % (email, sfdc_id))
 
-    def order_platemaps_by_barcode(self, sfdc_id, barcode, email=None):
+    def order_platemaps_by_barcode(self, sfdc_id, barcode, email=None, return_download=False):
         '''Look up order plate maps for a user based on email.
            sfdc_id and barcode.
+
+           Parameters
+           ==========
+           sfdc_id: should be the order id.
+           barcode: the barcode for the shipment
+           email: an email to override the default
+           return_download: if True, return the entire response with path to download
         '''
         email = self._get_email(email)
-        return self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
+        result = self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
+
+        # The result returns an amazon file path
+        if "platemaps_file_url" in result and not return_download:
+            result = requests.get(result["platemaps_file_url"])
+            if result.status_code == 200:
+
+                # Return list of rows, first is header row
+                result = str2csv(result.text)
+        return result
 
 
     def order_platemaps_by_shipment(self, sfdc_id, shipment_id, email=None):
         '''Look up order plate maps for a user based on email.
            sfdc_id and shipment id.
+
+           Parameters
+           ==========
+           sfdc_id: should be the order id.
+           shipment_id: should be the shipment id
+           email: an email to override the default
         '''
         email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/shipments/%s/plate-maps' % (email, sfdc_id, shipment_id))
+
+
