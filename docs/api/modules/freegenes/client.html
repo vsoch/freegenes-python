@@ -179,15 +179,16 @@
                         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--version&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> 
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;show singularity and spython version&quot;</span><span class="p">,</span> 
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;show version and exit&quot;</span><span class="p">,</span> 
                         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
 
     <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;description&#39;</span><span class="p">,</span>
                                        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;actions&#39;</span><span class="p">,</span>
                                        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;general usage&#39;</span><span class="p">)</span>
 
+    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;shell&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Interact with freegenes python&quot;</span><span class="p">)</span>
+    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;twist&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Interact with twist API&quot;</span><span class="p">)</span>
 
-    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;shell&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Interact with singularity python&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span></div>
 
 
@@ -254,6 +255,8 @@
     <span class="c1"># Does the user want help for a subcommand?</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;shell&#39;</span><span class="p">:</span> 
         <span class="kn">from</span> <span class="nn">.shell</span> <span class="k">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">func</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;twist&#39;</span><span class="p">:</span> 
+        <span class="kn">from</span> <span class="nn">.twist</span> <span class="k">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">func</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">print_help</span><span class="p">()</span>
 

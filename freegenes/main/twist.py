@@ -9,6 +9,7 @@ with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 '''
 
 from freegenes.version import __version__
+from freegenes.utils import str2csv
 from freegenes.logger import bot
 import requests
 import os
@@ -66,12 +67,14 @@ class Client(object):
                 bot.exit("Error with authentication, %s:%s" %(response.reason, response.status_code))
             self.token = response.json()['token']
 
+
     def _set_base(self, base):
         '''look for FREEGENES_TWIST_BASE defined in environ
         '''
         self.base = os.environ.get('FREEGENES_TWIST_BASE', base)
         if self.base:
             self.base = self.base.strip('/')
+
 
     def _get_email(self, email):
         '''get an email (required) either provided by calling function or
@@ -86,6 +89,7 @@ class Client(object):
             bot.exit("Email must provided to client, calling function, or in environment FREEGENES_TWIST_EMAIL.")
         return email
 
+
     def _set_email(self, email):
         '''look for FREEGENES_TWIST_EMAIL defined in environ
         '''
@@ -93,6 +97,7 @@ class Client(object):
         if not email:
             self.whoami()
         
+
     def _set_headers(self):
         '''set the headers to the default, meaning we provide an
            authorization token.
@@ -164,21 +169,25 @@ class Client(object):
             self.email = result["email"]
         return result
 
+
     def healthcheck(self):
         '''Returns the API healthcheck endpoint --> {'status': 'OK'}
         '''
         return self.get('/healthcheck/')
+
 
     def is_alive(self):
         '''Returns if the API is alive --> {'status': 'OK'}
         '''
         return self.get('/is_alive/')
 
+
     def version(self):
         '''Returns the API version information, including a dictionary with
            version, tag, branch, and git_commit.
         '''
         return self.get('/version/')
+
 
     # Accounts
 
@@ -187,25 +196,30 @@ class Client(object):
         '''
         return self.get('/v1/accounts/')
 
+
     def account(self, account_id):
         '''Look up a specific account based on account id.
         '''
         return self.get('/v1/accounts/%s' % account_id)
+
 
     def account_contacts(self, account_id):
         '''Look up account contacts based on account id.
         '''
         return self.get('/v1/accounts/%s/contacts' % account_id)
 
+
     def account_users(self, account_id):
         '''Look up account users based on account id.
         '''
         return self.get('/v1/accounts/%s/users' % account_id)
 
+
     def account_prices(self, account_id):
         '''Look up account prices based on account id.
         '''
         return self.get('/v1/accounts/%s/prices' % account_id)
+
 
     # Catalog Items
 
@@ -214,11 +228,13 @@ class Client(object):
         '''
         return self.get('/v1/catalog-items')
 
+
     def user(self, email=None):
         '''Look up user by email.
         '''
         email = self._get_email(email)
         return self.get('/v1/users/%s/' % email)
+
 
     def user_addresses(self, email=None):
         '''Look up user by email.
@@ -226,11 +242,13 @@ class Client(object):
         email = self._get_email(email)
         return self.get('/v1/users/%s/addresses/' % email)
 
+
     def orders(self, email=None):
         '''Look up orders for a user based on email.
         '''
         email = self._get_email(email)
         return self.get('/v1/users/%s/orders/' % email)
+
 
     # Orders
 
@@ -241,17 +259,67 @@ class Client(object):
         email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/items' % (email, sfdc_id))
 
-    def order_platemaps_by_barcode(self, sfdc_id, barcode, email=None):
+    def order_platemaps_by_barcode(self, sfdc_id, barcode, email=None, return_download=False):
         '''Look up order plate maps for a user based on email.
            sfdc_id and barcode.
+
+           Parameters
+           ==========
+           sfdc_id: should be the order id.
+           barcode: the barcode for the shipment
+           email: an email to override the default
+           return_download: if True, return the entire response with path to download
         '''
         email = self._get_email(email)
-        return self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
+        result = self.get('/v1/users/%s/orders/%s/plate-maps/%s' % (email, sfdc_id, barcode))
+
+        # The result returns an amazon file path
+        if "platemaps_file_url" in result and not return_download:
+            result = requests.get(result["platemaps_file_url"])
+            if result.status_code == 200:
+
+                # Return list of rows, first is header row
+                result = str2csv(result.text)
+        return result
+
+
+    def order_platemaps(self, sfdc_id, email=None):
+        '''A wrapper for order_platemaps_by_barcode, will handle parsing over
+           all shipment barcodes from containers for a single order. The
+           entire function is a bit slow with the staging API.
+
+           Parameters
+           ==========
+           sfdc_id: should be the order id.
+           email: an email to override the default
+        '''
+        email = self._get_email(email)
+        items = self.order_items(sfdc_id)
+        rows = []
+
+        for shipment in items["shipments"]: # typically < 5
+            for container in shipment['containers']:
+                new_rows = self.order_platemaps_by_barcode(
+                               sfdc_id=sfdc_id, 
+                               barcode=container["barcode"])
+                if not rows:
+                    rows = new_rows
+                else:
+                    rows = rows + new_rows[1:]
+        return rows                 
 
 
     def order_platemaps_by_shipment(self, sfdc_id, shipment_id, email=None):
         '''Look up order plate maps for a user based on email.
            sfdc_id and shipment id.
+
+           Parameters
+           ==========
+           sfdc_id: should be the order id.
+           shipment_id: should be the shipment id
+           email: an email to override the default
         '''
         email = self._get_email(email)
         return self.get('/v1/users/%s/orders/%s/shipments/%s/plate-maps' % (email, sfdc_id, shipment_id))
+
+

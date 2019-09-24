@@ -10,6 +10,8 @@
           url: "docs/getting-started/install"
         - title: Client
           url: "docs/getting-started/python-client"
+        - title: Twist Client
+          url: "docs/getting-started/twist-client"
         - title: Python Functions
           url: "api"
     - title: "About"
