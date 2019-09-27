@@ -98,7 +98,44 @@ class Client(object):
         bot.exit("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
 
 
-    # Endpoints
+    def post(self, url, headers=None, data=None):
+        '''the default post, will use default headers if custom aren't defined.
+           we take a partial url (e.g., /api/authors) and then add the base.
+
+           Parameters
+           ==========
+           url: the url endpoint to query (without the http/s or domain)
+           headers: if defined, don't use default headers.
+           data: data to add to the request.
+        '''
+        heads = headers or self.headers
+        fullurl = "%s%s" %(self.base, url)
+
+        # Remove empty / None fields from data
+        if data:
+            data = {k:v for k,v in data.items() if v}
+            
+        response = requests.post(fullurl, headers=heads, data=data)
+
+        # Return a successful response
+        if response.status_code == 201: 
+            return response.json()
+
+        bot.exit("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
+
+
+    def create_entity(self, name, data=None):
+        '''create an entity with a POST request.
+
+           Parameters
+           ==========
+           name: the name of the endpoint to post to.
+           data: key word arguments to include.
+        '''
+        return self.post('/api/%s' % name, data=data)
+
+
+    # GET Endpoints
 
     def get_entity(self, name, uuid=None):
         '''return a single entity if a uuid is provided, otherwise a list
@@ -117,6 +154,9 @@ class Client(object):
 
     def get_collections(self, uuid=None):
         return self.get_entity('collections', uuid)
+
+    def get_compositeparts(self, uuid=None):
+        return self.get_entity('compositeparts', uuid)
 
     def get_containers(self, uuid=None):
         return self.get_entity('containers', uuid)
@@ -156,3 +196,28 @@ class Client(object):
 
     def get_robots(self, uuid=None):
         return self.get_entity('robots', uuid)
+
+    # POST Endpoints (create)
+
+    def create_composite_part(self, name, 
+                                    part_ids, 
+                                    description=None,
+                                    composite_id=None,
+                                    composite_type=None)
+        '''create a new composite part based on uuids from existing parts.
+           
+           Parameters
+           ==========
+           name: a name for the composite part (required)
+           part_ids: a list of one or more part ids (required)
+           description: a string description (optional)
+           composite_id: a composite id (optional) (like gene_id for a part)
+           composite_type: the type of composite part (optional)
+        '''
+        data = {"name": name,
+                "parts": part_ids,
+                "description": description,
+                "composite_id": composite_id,
+                "composite_type": composite_type}
+       
+        return create_entity(self, "compositeparts", data)
