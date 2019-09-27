@@ -118,7 +118,7 @@ class Client(object):
         response = requests.post(fullurl, headers=heads, data=data)
 
         # Return a successful response
-        if response.status_code == 201: 
+        if response.status_code in [200, 201]: 
             return response.json()
 
         bot.exit("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
@@ -201,14 +201,16 @@ class Client(object):
 
     def create_composite_part(self, name, 
                                     part_ids, 
+                                    sequence,
                                     description=None,
                                     composite_id=None,
-                                    composite_type=None)
+                                    composite_type=None):
         '''create a new composite part based on uuids from existing parts.
            
            Parameters
            ==========
            name: a name for the composite part (required)
+           sequence: the new sequence
            part_ids: a list of one or more part ids (required)
            description: a string description (optional)
            composite_id: a composite id (optional) (like gene_id for a part)
@@ -216,8 +218,9 @@ class Client(object):
         '''
         data = {"name": name,
                 "parts": part_ids,
+                "sequence": sequence,
                 "description": description,
                 "composite_id": composite_id,
                 "composite_type": composite_type}
        
-        return create_entity(self, "compositeparts", data)
+        return self.create_entity("compositeparts", data)
