@@ -70,7 +70,7 @@ class Client(object):
 
     # Specific API calls
 
-    def get(self, url, headers=None, page=None, paginate=True, limit=1000):
+    def get(self, url, headers=None, paginate=True, limit=1000):
         '''the default get, will use default headers if custom aren't defined.
            we take a partial url (e.g., /api/authors) and then add the base.
 
@@ -78,8 +78,8 @@ class Client(object):
            ==========
            url: the url endpoint to query (without the http/s or domain)
            headers: if defined, don't use default headers.
-           page: obtain a specific page of the result.
            paginate: obtain all pages after query (default is True)
+           limit: number of responses per query (default 1000)
         '''
         heads = headers or self.headers
 
@@ -88,11 +88,10 @@ class Client(object):
         else:
             fullurl = "%s%s?limit=%s" %(self.base, url, limit)
 
-            # If we are provided a page
-            if page:
-                fullurl = "%s&page=%s" %(fullurl, page)
-
         response = requests.get(fullurl, headers=heads)
+        print(response)
+        print(fullurl)
+        print(heads)
 
         # Return a successful response
         if response.status_code == 200:
@@ -105,7 +104,7 @@ class Client(object):
                 results = response['results']
 
             # Are there pages (but the user doesn't want a specific one)
-            if paginate and not page:
+            if paginate:
                 next_url = response.get('next')
                 if next_url is not None:
                     return results + self.get(next_url, headers)
