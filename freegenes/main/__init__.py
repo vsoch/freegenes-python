@@ -106,9 +106,9 @@ class Client(object):
 
             # Are there pages (but the user doesn't want a specific one)
             if paginate and not page:
-                next = response.get('next')
-                if next is not None:
-                    return results + self.get(next, headers)
+                next_url = response.get('next')
+                if next_url is not None:
+                    return results + self.get(next_url, headers)
             return results
 
         bot.exit("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
