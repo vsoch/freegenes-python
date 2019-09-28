@@ -83,15 +83,12 @@ class Client(object):
         '''
         heads = headers or self.headers
 
+        # A second call will already provide a complete url
+        fullurl = "%s%s?limit=%s" %(self.base, url, limit)
         if url.startswith('http'):
             fullurl = url
-        else:
-            fullurl = "%s%s?limit=%s" %(self.base, url, limit)
 
         response = requests.get(fullurl, headers=heads)
-        print(response)
-        print(fullurl)
-        print(heads)
 
         # Return a successful response
         if response.status_code == 200:
@@ -110,8 +107,8 @@ class Client(object):
                     return results + self.get(next_url, headers)
             return results
 
-        bot.exit("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
-
+        bot.error("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
+        return response
 
     def post(self, url, data=None, headers=None):
         '''the default post, will use default headers if custom aren't defined.
