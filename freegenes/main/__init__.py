@@ -215,6 +215,7 @@ class Client(object):
 
     def create_composite_part(self, name, 
                                     sequence,
+                                    circular=True,
                                     part_ids=None,
                                     description=None,
                                     direction_string=None,
@@ -229,6 +230,7 @@ class Client(object):
            ==========
            name: a name for the composite part (required)
            sequence: the new sequence (required)
+           circular: is the sequence circular? (default True)
            part_ids: a list of one or more part ids (optional)
            description: a string description (optional)
            composite_id: a composite id (optional) (like gene_id for a part)
@@ -238,7 +240,7 @@ class Client(object):
         if not part_ids:
 
             # [(uuid, direction, start, end),
-            selected_parts = self._derive_parts(sequence)
+            selected_parts = self._derive_parts(sequence, circular)
             part_ids = [x[0] for x in selected_parts]
             direction_string = "".join([x[1] for x in selected_parts])
 

@@ -172,6 +172,13 @@ and then from those results we find a "best answer" with a scheduling algorithm:
  3. For each new element, we check it against a list of selected_sequence items (which starts empty) to look for any overlap.
  4. If there isn't overlap, we add to selected sequences.
 
+We assume that the sequence provided is circular, but if it's not, you should set circular
+to False:
+
+```python
+> composite_part = client.create_composite_part(name=name, sequence=sequence, circular=False)
+```
+
 The final result will include an ordered list of the longest parts. If there are other
 combinations, the client could remove the first match (the longest) and repeat the algorithm again -
 however in practice the first result is the "right answer" and subsequent results turn out to 

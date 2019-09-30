@@ -14,11 +14,12 @@ import requests
 import os
 import re
 
-def derive_parts(self, sequence):
+def derive_parts(self, sequence, circular=True):
     '''based on a sequence, search all freegenes parts for the sequence,
        forward and backwards. This is done by the client (and not on the
        server) as to not tax the server. We cache the parts request to
-       not make the same one over and over.
+       not make the same one over and over. If the sequence is circular,
+       we add it to itself, otherwise not.
 
        Algorithm:
        =========
@@ -33,7 +34,8 @@ def derive_parts(self, sequence):
     self._cache_parts()
 
     # To account for circular sequences
-    sequence = sequence + sequence
+    if circular:
+        sequence = sequence + sequence
 
     # Parts found to match
     coords = []
