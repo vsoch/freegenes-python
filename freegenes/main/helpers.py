@@ -32,6 +32,9 @@ def derive_parts(self, sequence):
     '''
     self._cache_parts()
 
+    # To account for circular sequences
+    sequence = sequence + sequence
+
     # Parts found to match
     coords = []
 
