@@ -17,6 +17,7 @@ The client here will eventually be released as "freegenes"
 and the versions here will coincide with these releases.
 
 ## [master](https://github.com/vsoch/freegenes-python/tree/master)
+ - CompositeParts can be circular [#9](https://github.com/vsoch/freegenes-python/issues/9) (0.0.14)
  - CompositePart endpoint (0.0.13)
  - Adding plate-map parsing to Twist (0.0.12)
  - Twist API client endpoints (0.0.11)
