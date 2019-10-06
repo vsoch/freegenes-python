@@ -99,15 +99,15 @@ the client:
 
 ```bash
 In [1]: client. 
-                base                get_containers()    get_modules()       get_parts()         get_protocols()    
-                get()               get_distributions() get_operations()    get_plans()         get_robots()       
-                get_authors()       get_entity()        get_orders()        get_plates()        headers            
-                get_collections()   get_institutions()  get_organisms()     get_platesets()     token        
+  	base                    create_composite_part() create_institution()     
+  	cache                   create_container()      create_module()          
+  	create_author()         create_distribution()   create_operation()      >
+  	create_collection()     create_entity()         create_order()     
 ```
 
 These are endpoints, explained in further detail below.
 
-## Basic Endpoints
+## Get Endpoints
 
 A basic endpoint is a function to get a single
 or list of entities. This contrasts to a more complicated function that might perform
@@ -146,7 +146,320 @@ The above works for all of the following:
 > client.get_robots()
 ```
 
-## Functions
+## Errors
+
+If you get a bad request, try looking at the json response to determine why:
+
+
+```python
+collection = client.create_collection(name=name, description=description)                                   
+ERROR Error with /api/collections/, return value 400: Bad Request
+
+> collection.reason                                                                                           
+# 'Bad Request'
+
+> collection.json()
+# {'name': ['collection with this name already exists.']}
+```
+
+If you get a 400 family of errors, this indicates Permission denied,
+and typically results because you need to be staff or superuser to
+use endpoints that modify data.
+
+
+## Post (create) Endpoints
+
+### Create an Author
+
+You can create an author as follows:
+
+```python
+name = "Big Bird"
+email = "yellowisgreat@bird.dev"
+affiliation = "Sesame Street"
+
+author = client.create_author(name=name, email=email, affiliation=affiliation)
+```
+
+Here is a successful response, and note that you can also provide an orcid id,
+although it's not required.
+
+```python
+> author
+{'uuid': 'e246f6bb-5cc4-4cc3-bd41-73d24567c0f4',
+ 'name': 'Big Bird',
+ 'email': 'yellowisgreat@bird.dev',
+ 'affiliation': 'Sesame Street',
+ 'orcid': None,
+ 'tags': [],
+ 'label': 'author'}
+```
+
+### Create a Container
+
+```python
+name = "Crayon Box"
+container_type = "trash"
+description = "This is a crayon trash box?"
+parent_id = "1ca52bd5-05e6-4f4f-913b-6760bed611f2"
+
+container = client.create_container(name=name, container_type=container_type, description=description, parent_id=parent_id)
+```
+
+Note that since the top level parent container is the lab (only one per instance), you are required to provide
+a parent id. Here is the created container:
+
+```python
+> container
+{'uuid': 'a5541413-b002-4914-8d17-c2d8a30bc962',
+ 'time_created': '2019-10-06T11:47:39.464202-05:00',
+ 'time_updated': '2019-10-06T11:47:39.464250-05:00',
+ 'name': 'Crayon Box',
+ 'container_type': 'trash',
+ 'description': 'This is a crayon trash box?',
+ 'estimated_temperature': None,
+ 'x': None,
+ 'y': None,
+ 'z': None,
+ 'parent': '1ca52bd5-05e6-4f4f-913b-6760bed611f2',
+ 'plates': [],
+ 'label': 'container'}
+```
+
+### Create a Distribution
+
+A distribution requires a name and description
+
+```python
+name = "Send out the hounds"
+description = "So many hounds"
+plateset_ids = ["37d895e3-eaf1-48f5-ad3d-9a7571e4434c"]
+
+dist = client.create_distribution(name=name, description=description, plateset_ids=plateset_ids)
+```
+
+Here is the created distribution:
+
+```python
+> dist
+{'uuid': '418f1e66-7f3b-46cf-b707-40bad407f202',
+ 'time_created': '2019-10-06T11:53:20.121227-05:00',
+ 'time_updated': '2019-10-06T11:53:20.121277-05:00',
+ 'name': 'Send out the hounds',
+ 'description': 'So many hounds',
+ 'platesets': ['37d895e3-eaf1-48f5-ad3d-9a7571e4434c'],
+ 'label': 'distribution'}
+```
+
+Note that you can provide a list of plateset ids, or a single id for platesets.
+
+
+### Create a Collection
+
+A collection requires a name and description:
+
+```python
+name="dinosaur-collection"                                                                                  
+description="This is the description"                                                                       
+
+collection = client.create_collection(name=name, description=description)
+```
+
+If you are superuser or admin, the created collection will be returned.
+
+```python
+{'uuid': 'ec624409-26cb-4882-969e-f0d7c1c1aa44',
+ 'time_created': '2019-10-06T10:01:36.935007-05:00',
+ 'time_updated': '2019-10-06T10:01:36.935073-05:00',
+ 'name': 'dinosaur-collection',
+ 'description': 'This is the description',
+ 'parent': None,
+ 'tags': [],
+ 'label': 'collection'}
+```
+
+You can also provide a parent collection id with `parent_id` or a list of
+tag ids with "tag_ids".
+
+
+### Create a Module
+
+To create a module, you need to provide more fields:
+
+```python
+name = "Dinosaur module"
+notes = "This is a module for dinosaurs."
+model_id = "dino-raptor-3000"
+module_type = "pipette"
+container_id = "1ca52bd5-05e6-4f4f-913b-6760bed611f2"
+
+module = client.create_module(name=name, notes=notes, model_id=model_id, module_type=module_type, container_id=container_id)
+```
+
+Note that the container id is the uuid for an existing container in the database.
+A successful response looks like the following:
+
+```python
+> module
+{'uuid': '1b46bb05-09c9-401c-9f32-b1a17240a3ba',
+ 'time_created': '2019-10-06T11:34:26.698264-05:00',
+ 'time_updated': '2019-10-06T11:34:26.698314-05:00',
+ 'name': 'Dinosaur module',
+ 'container': '1ca52bd5-05e6-4f4f-913b-6760bed611f2',
+ 'notes': 'This is a module for dinosaurs.',
+ 'model_id': 'dino-raptor-3000',
+ 'module_type': 'pipette',
+ 'data': {},
+ 'label': 'module'}
+```
+
+### Create an Institution
+
+An institution only required a name, and a boolean to indicate if they have
+signed a master MTA agreement (defaults to False):
+
+```python
+name = "Dinosaur College"
+signed_master = True
+
+institution = client.create_institution(name=name, signed_master=signed_master)
+```
+
+A successful response looks like the following:
+
+```python
+{'uuid': 'b8ebf93f-5418-4a19-b2ab-1b6737ba1142',
+ 'name': 'Dinosaur College',
+ 'signed_master': True,
+ 'label': 'institution'}
+```
+
+### Create an Operation
+
+An operation only requires a name and description.
+
+```python
+name = "Operation Neptune"
+description = "pew pew pew"
+
+operation = client.create_operation(name=name, description=description)
+```
+
+A successful operation looks like the following:
+
+
+```python
+> operation
+
+{'uuid': '9374b582-8237-4939-8ff6-0fbdce691724',
+ 'time_created': '2019-10-06T11:37:45.301572-05:00',
+ 'time_updated': '2019-10-06T11:37:45.301623-05:00',
+ 'name': 'Operation Neptune',
+ 'description': 'pew pew pew',
+ 'plans': [],
+ 'label': 'operation'}
+```
+
+Note that you can also provide a list of `plan_ids` to select plans.
+
+
+### Create an Order
+
+Orders require a name and a description.
+
+```python
+name = "Buy Taco Genes"
+notes = "Extra avocado please"
+
+order = client.create_order(name=name, notes=notes)
+```
+
+A successful response looks like the following:
+
+```python
+> order
+{'uuid': 'b43a53e8-d957-434d-8553-ab7384e0db1f',
+ 'time_created': '2019-10-06T11:40:39.715394-05:00',
+ 'time_updated': '2019-10-06T11:40:39.715426-05:00',
+ 'name': 'Buy Taco Genes',
+ 'notes': 'Extra avocado please',
+ 'distributions': [],
+ 'label': 'order'}
+```
+
+You can also provide `distribution_ids` to add one or more distributions to
+the order (a list).
+
+### Create an Organism
+
+An organism requires a name, description, and genotype.
+
+```python
+name = "Vanessasaurus"
+description = "A soon to be extinct dinosaur."	
+genotype = "Gaaattaagaataata"
+
+organism = client.create_organism(name=name, description=description, genotype=genotype)
+```
+
+Here is a successful response:
+
+```python
+> organism
+{'uuid': 'bafb3e9a-7bd0-40fc-a402-f17793e4ff05',
+ 'time_created': '2019-10-06T12:29:24.371688-05:00',
+ 'time_updated': '2019-10-06T12:29:24.371721-05:00',
+ 'name': 'Vanessasaurus',
+ 'description': 'A soon to be extinct dinosaur.',
+ 'genotype': 'Gaaattaagaataata',
+ 'label': 'organism'}
+```
+
+### Create a Part
+
+A part requires the following fields:
+
+```python
+kwargs = {
+    "name": "Thread",
+    "description": "a piece of twine",
+    "gene_id": "twiney-123",
+    "part_type": "plasmid",
+    "primer_forward": "AATG",
+    "primer_reverse": "TGAA",	
+    "author_id": "c9d9237b-c4f7-48a9-9ac1-33c2393cfbf1"
+}
+
+part = client.create_part(**kwargs)
+```
+
+A successful response looks like the following:
+
+```python
+> part
+{'uuid': 'e0fd70fe-3c82-4b48-83f2-ac2425a9e177',
+ 'time_created': '2019-10-06T12:42:35.703039-05:00',
+ 'time_updated': '2019-10-06T12:42:35.703081-05:00',
+ 'name': 'Thread',
+ 'description': 'a piece of twine',
+ 'status': 'null',
+ 'gene_id': 'twiney-123',
+ 'part_type': 'plasmid',
+ 'genbank': {},
+ 'original_sequence': None,
+ 'optimized_sequence': None,
+ 'synthesized_sequence': None,
+ 'full_sequence': None,
+ 'vector': None,
+ 'primer_forward': 'AATG',
+ 'primer_reverse': 'TGAA',
+ 'barcode': None,
+ 'label': 'part',
+ 'translation': None,
+ 'tags': [],
+ 'collections': [],
+ 'author': 'c9d9237b-c4f7-48a9-9ac1-33c2393cfbf1'}
+```
 
 ### Create Composite Part
 
@@ -205,3 +518,227 @@ request to the server to create the Composite Part. If the create or update is s
 
 See [this original issue](https://github.com/vsoch/freegenes/issues/63) for discussion
 about this endpoint function.
+
+### Create a Plan
+
+```python
+name = "Dr. Evil's Plan"
+description = "One hundred... billion dollars!"
+status = "Planned"
+operation_id = '9374b582-8237-4939-8ff6-0fbdce691724'
+
+plan = client.create_plan(name=name, description=description, status=status, operation_id=operation_id)
+```
+
+The successful response looks like the following:
+
+```python
+> plan
+{'uuid': '1f9bf6ab-0871-4d70-948f-533df87914af',
+ 'time_created': '2019-10-06T12:49:58.534434-05:00',
+ 'time_updated': '2019-10-06T12:49:58.534480-05:00',
+ 'name': "Dr. Evil's Plan",
+ 'description': 'One hundred... billion dollars!',
+ 'parent': None,
+ 'operation': '9374b582-8237-4939-8ff6-0fbdce691724',
+ 'status': 'Planned',
+ 'label': 'plan'}
+```
+
+Note you can also provide a `parent_id`  if relevant.
+
+### Create a Plate
+
+The following fields are required:
+
+```python
+kwargs = {
+    "plate_type": "culture",
+    "plate_form": "standard96",
+    "status": "Planned",
+    "name": "Broccoli Fingers",
+    "notes": "Broccolini or broccoli?",
+    "container_id": "1ca52bd5-05e6-4f4f-913b-6760bed611f2"
+}
+
+plate = client.create_plate(**kwargs)
+```
+
+Note that you can also provide `well_ids` and `protocol_id`, along with `length` and `width`. 
+Here is the created object:
+
+```python
+> plate
+{'uuid': '8463b8b7-3726-4919-8dac-e8f71c445280',
+ 'time_created': '2019-10-06T12:56:40.314493-05:00',
+ 'time_updated': '2019-10-06T12:56:40.314532-05:00',
+ 'plate_type': 'culture',
+ 'plate_form': 'standard96',
+ 'status': 'Planned',
+ 'name': 'Broccoli Fingers',
+ 'thaw_count': 0,
+ 'notes': 'Broccolini or broccoli?',
+ 'height': 16,
+ 'length': 24,
+ 'container': '1ca52bd5-05e6-4f4f-913b-6760bed611f2',
+ 'protocol': None,
+ 'wells': [],
+ 'label': 'plate'}
+```
+
+### Create a PlateSet
+
+You are required to provide one or more plates to create a plateset.
+
+```python
+description = "The best plates"
+name = "My Plates"
+plate_ids = ['8463b8b7-3726-4919-8dac-e8f71c445280']
+
+plateset = client.create_plateset(description=description, name=name, plate_ids=plate_ids)
+```
+
+The created object is shown below.
+
+```python
+> plateset
+{'uuid': '6e12439e-2aff-4e16-9726-390e8d21b198',
+ 'description': 'The best plates',
+ 'name': 'My Plates',
+ 'time_created': '2019-10-06T12:59:11.632197-05:00',
+ 'time_updated': '2019-10-06T12:59:11.632245-05:00',
+ 'plates': ['8463b8b7-3726-4919-8dac-e8f71c445280'],
+ 'label': 'plateset'}
+```
+
+### Create a Sample
+
+You must provide wells and a part unique id:
+
+```
+part_id = "243611b6-124a-461f-bfba-bf745b131db3"
+well_ids = ['565ab16f-4fb0-45ec-a296-a620a5cd0d24',
+            '0740224f-34d5-45c4-a672-30b5ed6e1472']
+
+sample = client.create_sample(part_id=part_id, well_ids=well_ids)
+```
+
+Here is a successful response:
+
+```
+> sample
+{'uuid': 'da03fed5-0d67-498d-9071-22485f479d4f',
+ 'outside_collaborator': True,
+ 'sample_type': None,
+ 'status': None,
+ 'evidence': None,
+ 'vendor': None,
+ 'time_created': '2019-10-06T13:16:53.029585-05:00',
+ 'time_updated': '2019-10-06T13:16:53.029633-05:00',
+ 'derived_from': None,
+ 'part': '243611b6-124a-461f-bfba-bf745b131db3',
+ 'index_forward': None,
+ 'index_reverse': None,
+ 'label': 'sample',
+ 'wells': ['0740224f-34d5-45c4-a672-30b5ed6e1472',
+  '565ab16f-4fb0-45ec-a296-a620a5cd0d24']}
+```
+
+### Create a Protocol
+
+You only are required to add a description for a protocol.
+
+```python
+description = "What is a Protocol, Protocol"
+
+protocol = client.create_protocol(description=description)
+```
+
+If you want to add "data" (a dictionary) for it, you can specify `protocol_data`
+or a schema with `schema_id`. Here is a response from the above:
+
+```python
+> protocol
+{'uuid': '9c0dea2c-07fd-4697-86b9-02f7f84647e1',
+ 'time_created': '2019-10-06T13:00:30.479923-05:00',
+ 'time_updated': '2019-10-06T13:00:30.479962-05:00',
+ 'data': {},
+ 'description': 'What is a Protocol, Protocol',
+ 'label': 'protocol',
+ 'schema': None}
+```
+
+### Create a Robot
+
+Here is how to create a robot:
+
+```python
+kwargs = {
+    "container_id": "1ca52bd5-05e6-4f4f-913b-6760bed611f2",
+    "name": "Dinobot",
+    "robot_id": "dinobot-3000",
+    "notes": "This is the dinobot.",
+    "server_version": "1.0.0",
+    "right_mount_id": '1b46bb05-09c9-401c-9f32-b1a17240a3ba',
+    "left_mount_id": '3443ba88-a75e-4f1b-be96-eb185745528e'
+}	
+
+robot = client.create_robot(**kwargs)
+```
+
+You can also provide an optional `robot_type`. Here is the successful response:
+
+```python
+> robot
+{'uuid': '89d360ed-211b-4a27-8a54-601e4d0ec8ed',
+ 'time_created': '2019-10-06T13:07:21.996704-05:00',
+ 'time_updated': '2019-10-06T13:07:21.996914-05:00',
+ 'container': '1ca52bd5-05e6-4f4f-913b-6760bed611f2',
+ 'name': 'Dinobot',
+ 'robot_id': 'dinobot-3000',
+ 'robot_type': 'OT2',
+ 'notes': 'This is the dinobot.',
+ 'server_version': '1.0.0',
+ 'right_mount': '1b46bb05-09c9-401c-9f32-b1a17240a3ba',
+ 'left_mount': '3443ba88-a75e-4f1b-be96-eb185745528e',
+ 'label': 'robot'}
+```
+
+
+### Create a Schema
+
+Here is how to create a schema:
+
+```python
+name = "Robot Schema"
+description = "This is the schema for a robot"	
+schema_version = "1.0.0"
+
+schema = client.create_schema(name=name, description=description, schema_version=schema_version)
+```
+Here is the successful response:
+
+```python
+> schema
+{'uuid': '0764da51-7ecc-466d-a488-b12a31924162',
+ 'time_created': '2019-10-06T13:19:05.715045-05:00',
+ 'time_updated': '2019-10-06T13:19:05.715099-05:00',
+ 'name': 'Robot Schema',
+ 'description': 'This is the schema for a robot',
+ 'schema': {},
+ 'schema_version': '1.0.0',
+ 'label': 'schema'}
+```
+
+### Create a Tag
+
+Creating a tag simply requires a tag!
+
+```python
+tag = client.create_tag(tag="bogey")
+
+> tag
+{'uuid': 'd600c0f6-9ff8-4e3b-9c27-07f5476f54be',
+ 'tag': 'bogey',
+ 'label': 'tag'}
+```
