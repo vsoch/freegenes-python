@@ -127,7 +127,10 @@ class Client(object):
         if data:
             data = {k:v for k,v in data.items() if v}
 
-        print(data)
+        # POST indicates create or update, we need at least one field
+        if not data:
+            bot.exit("At least one parameter must be provided for a create.")
+
         response = requests.post(fullurl, headers=heads, data=data)
 
         # Return a successful response
@@ -135,6 +138,24 @@ class Client(object):
             return response.json()
 
         bot.error("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
+        return response
+
+
+    def delete(self, url, headers=None):
+        '''data is required (typically with a unique id in the url to identify 
+           the object to delete)
+
+           Parameters
+           ==========
+           url: the url endpoint to query (without the http/s or domain)
+        '''
+        heads = headers or self.headers
+        fullurl = "%s%s" %(self.base, url)
+        response = requests.delete(fullurl, headers=heads)
+
+        if response.status_code not in [204]: 
+            bot.error("Error with %s, return value %s: %s" %(url, response.status_code, response.reason))
+
         return response
 
 
@@ -148,6 +169,61 @@ class Client(object):
         '''
         return self.post('/api/%s/' % name, data=data)
 
+    # DELETE Endpoints
+
+    def delete_entity(self, name, uuid):
+        '''delete an entity with a DELETE request. For all entities,
+           we take the uuid, and the name of the delete endpoint.
+        '''
+        return self.delete('/api/%s/%s' % (name, uuid))
+
+    def delete_author(self, uuid=None):
+        return self.delete_entity('authors', uuid)
+
+    def delete_collection(self, uuid):
+        return self.delete_entity('collections', uuid)
+
+    def delete_compositepart(self, uuid):
+        return self.delete_entity('compositeparts', uuid)
+
+    def delete_container(self, uuid):
+        return self.delete_entity('containers', uuid)
+
+    def delete_distribution(self, uuid):
+        return self.delete_entity('distributions', uuid)
+
+    def delete_institution(self, uuid):
+        return self.delete_entity('institutions', uuid)
+
+    def delete_module(self, uuid):
+        return self.delete_entity('modules', uuid)
+
+    def delete_operation(self, uuid):
+        return self.delete_entity('operations', uuid)
+
+    def delete_order(self, uuid):
+        return self.delete_entity('orders', uuid)
+
+    def delete_organism(self, uuid):
+        return self.delete_entity('organisms', uuid)
+
+    def delete_part(self, uuid):
+        return self.delete_entity('parts', uuid)
+
+    def delete_plan(self, uuid):
+        return self.delete_entity('plans', uuid)
+
+    def delete_plate(self, uuid):
+        return self.delete_entity('plates', uuid)
+
+    def delete_plateset(self, uuid):
+        return self.delete_entity('platesets', uuid)
+
+    def delete_protocol(self, uuid):
+        return self.delete_entity('protocols', uuid)
+
+    def delete_robot(self, uuid):
+        return self.delete_entity('robots', uuid)
 
     # GET Endpoints
 
@@ -213,6 +289,244 @@ class Client(object):
 
     # POST Endpoints (create)
 
+    def create_author(self, name, email, affiliation, orcid=None, tag_ids=None):
+        '''create a new author using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "email": email,
+                "affiliation": affiliation,
+                "orcid": orcid,
+                "tags": tag_ids}
+
+        return self.create_entity("authors", data)
+
+    def create_container(self, name, container_type, description, parent_id,
+                         estimated_temperature=None, x=None, y=None, z=None):
+        '''create a new container using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "parent": parent_id,
+                "container_type": container_type,
+                "description": description,
+                "estimated_temperature": estimated_temperature,
+                "x": x, "y": y, "z": z}
+
+        return self.create_entity("containers", data)
+
+    def create_collection(self, name, description, parent_id, tag_ids=None):
+        '''create a new collection using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name, 
+                "description": description,
+                "parent": parent_id,
+                "tags": tag_ids}
+        return self.create_entity("collections", data)
+
+
+    def create_distribution(self, name, description, plateset_ids):
+        '''create a new distribution using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "description": description,
+                "platesets": plateset_ids}
+        return self.create_entity("distributions", data)
+
+
+    def create_module(self, name, container_id, notes, model_id, module_type, module_data=None):
+        '''create a new module using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "notes": notes,
+                "container": container_id,
+                "model_id": model_id,
+                "module_type": module_type,
+                "data": module_data}
+
+        return self.create_entity("modules", data)
+
+    def create_institution(self, name, signed_master=False):
+        '''create a new institution using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name, "signed_master": signed_master}
+        return self.create_entity("institutions", data)
+
+
+    def create_operation(self, name, description, plan_ids):
+        '''create a new operation using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "description": description,
+                "plans": plan_ids}
+        return self.create_entity("operations", data)
+
+
+    def create_order(self, name, notes, distribution_ids=None):
+        '''create a new order using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "notes": notes,
+                "distributions": distribution_ids}
+        return self.create_entity("orders", data)
+
+
+    def create_organism(self, name, description, genotype):
+        '''create a new organism using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "description": description,
+                "genotype": genotype}
+
+        return self.create_entity("organisms", data)
+
+    def create_plan(self, name, description, status, operation_id, parent_id=None):
+        '''create a new plan using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "operation": operation_id,
+                "parent": parent_id,
+                "description": description,
+                "status": status}
+
+        return self.create_entity("plans", data)
+
+
+    def create_part(self, name, gene_id, author_id, part_type, primer_forward, primer_reverse, 
+                    genbank=None, original_sequence=None, optimized_sequence=None, 
+                    synthesized_sequence=None, full_sequence=None, vector=None,
+                    description=None, status=None, barcode=None, translation=None,
+                    tag_ids=None, collection_ids=None):
+        '''create a new part using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "gene_id": gene_id,
+                "author": author_id,
+                "part_type": part_type,
+                "primer_forward": primer_forward,
+                "primer_reverse": primer_reverse,
+                "genbank": genbank,
+                "original_sequence": original_sequence,
+                "optimized_sequence": optimized_sequence,
+                "synthesized_sequence": synthesized_sequence,
+                "full_sequence": full_sequence,
+                "vector": vector,
+                "barcode": barcode,
+                "translation": translation,
+                "tags": tag_ids,
+                "collections": collection_ids,
+                "description": description,
+                "status": status}
+
+        return self.create_entity("parts", data)
+
+
+    def create_protocol(self, description, protocol_data=None, schema_id=None):
+        '''create a new protocol using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"description": description,
+                "schema": schema_id,
+                "data": protocol_data}
+
+        return self.create_entity("protocols", data)
+
+
+    def create_plate(self, name, container_id, plate_type, plate_form, status, notes,
+                     protocol_id=None, well_ids=None, thaw_count=None, height=None, length=None):
+        '''create a new plate using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"plate_type": plate_type,
+                "plate_form": plate_form,
+                "container": container_id,
+                "status": status,
+                "name": name,
+                "wells": well_ids,
+                "notes": notes,
+                "thaw_count": thaw_count,
+                "protocol": protocol_id,
+                "height": height,
+                "length": length}
+
+        return self.create_entity("plates", data)
+
+
+    def create_plateset(self, name, description, plate_ids):
+        '''create a new plateset using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"description": description,
+                "name": name,
+                "plates": plate_ids}
+
+        return self.create_entity("platesets", data)
+
+
+    def create_robot(self, name, robot_id, container_id, notes, server_version,
+                     left_mount_id, right_mount_id, robot_type=None):
+        '''create a new robot using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "container": container_id,
+                "left_mount": left_mount_id,
+                "right_mount": right_mount_id,
+                "robot_id": robot_id,
+                "robot_type": robot_type,
+                "notes": notes,
+                "server_version": server_version}
+
+        return self.create_entity("robots", data)
+
+
+    def create_sample(self, part_id, well_ids, status=None, evidence=None,
+                      outside_collaborator=True, vendor=None, sample_type=None,
+                      index_forward=None, index_reverse=None):
+        '''create a new sample using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"part": part_id,
+                "status": status,
+                "evidence": evidence,
+                "wells": well_ids,
+                "outside_collaborator": outside_collaborator,
+                "vendor": vendor,
+                "sample_type": sample_type,
+                "index_forward": index_forward,
+                "index_reverse": index_reverse}
+
+        return self.create_entity("samples", data)
+
+    def create_schema(self, name, description,
+                      schema=None,
+                      schema_version=None):
+        '''create a new schema using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        data = {"name": name,
+                "description": description,
+                "schema": schema,
+                "schema_version": schema_version}
+
+        return self.create_entity("schemas", data)
+
+    def create_tag(self, tag):
+        '''create a new tag using the FreeGenes API. Must be superuser
+           or staff, and provide required fields in data.
+        '''
+        return self.create_entity("tags", {"tag": tag})
+
+
     def create_composite_part(self, name, 
                                     sequence,
                                     circular=True,
@@ -253,7 +567,6 @@ class Client(object):
                 "composite_type": composite_type}
        
         return self.create_entity("compositeparts", data)
-
 
 
 # Helper and Caching Functions
