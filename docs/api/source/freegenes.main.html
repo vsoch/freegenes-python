@@ -177,11 +177,283 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
 with this file, You can obtain one at <a class="reference external" href="http://mozilla.org/MPL/2.0/">http://mozilla.org/MPL/2.0/</a>.</p>
 <dl class="class">
 <dt id="freegenes.main.Client">
-<em class="property">class </em><code class="descclassname">freegenes.main.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>token=None</em>, <em>base='https://freegenes.dev'</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">freegenes.main.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>token=None</em>, <em>base='https://freegenes.dev'</em>, <em>validate=True</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
+<dt id="freegenes.main.Client.create_author">
+<code class="descname">create_author</code><span class="sig-paren">(</span><em>name</em>, <em>email</em>, <em>affiliation</em>, <em>orcid=None</em>, <em>tag_ids=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_author"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_author" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new author using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_collection">
+<code class="descname">create_collection</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>parent_id</em>, <em>tag_ids=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_collection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new collection using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_composite_part">
+<code class="descname">create_composite_part</code><span class="sig-paren">(</span><em>name</em>, <em>sequence</em>, <em>circular=True</em>, <em>part_ids=None</em>, <em>description=None</em>, <em>direction_string=None</em>, <em>composite_id=None</em>, <em>composite_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_composite_part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_composite_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new composite part from a sequence. If no parts are provided,
+then we search the provided sequence for all parts in FreeGenes, and
+make the association (and derive directions). The data for the parts
+is cached with the client so we only need to derive it once.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>a name for the composite part (required)</em>)</li>
+<li><strong>sequence</strong> (<em>the new sequence (required)</em>)</li>
+<li><strong>circular</strong> (<em>is the sequence circular? (default True)</em>)</li>
+<li><strong>part_ids</strong> (<em>a list of one or more part ids (optional)</em>)</li>
+<li><strong>description</strong> (<em>a string description (optional)</em>)</li>
+<li><strong>composite_id</strong> (<em>a composite id (optional) (like gene_id for a part)</em>)</li>
+<li><strong>composite_type</strong> (<em>the type of composite part (optional)</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_container">
+<code class="descname">create_container</code><span class="sig-paren">(</span><em>name</em>, <em>container_type</em>, <em>description</em>, <em>parent_id</em>, <em>estimated_temperature=None</em>, <em>x=None</em>, <em>y=None</em>, <em>z=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_container" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new container using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_distribution">
+<code class="descname">create_distribution</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>plateset_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new distribution using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_entity">
+<code class="descname">create_entity</code><span class="sig-paren">(</span><em>name</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>create an entity with a POST request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>the name of the endpoint to post to.</em>)</li>
+<li><strong>data</strong> (<em>key word arguments to include.</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_institution">
+<code class="descname">create_institution</code><span class="sig-paren">(</span><em>name</em>, <em>signed_master=False</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_institution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_institution" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new institution using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_module">
+<code class="descname">create_module</code><span class="sig-paren">(</span><em>name</em>, <em>container_id</em>, <em>notes</em>, <em>model_id</em>, <em>module_type</em>, <em>module_data=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new module using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_operation">
+<code class="descname">create_operation</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>plan_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new operation using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_order">
+<code class="descname">create_order</code><span class="sig-paren">(</span><em>name</em>, <em>notes</em>, <em>distribution_ids=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new order using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_organism">
+<code class="descname">create_organism</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>genotype</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_organism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_organism" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new organism using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_part">
+<code class="descname">create_part</code><span class="sig-paren">(</span><em>name</em>, <em>gene_id</em>, <em>author_id</em>, <em>part_type</em>, <em>primer_forward</em>, <em>primer_reverse</em>, <em>genbank=None</em>, <em>original_sequence=None</em>, <em>optimized_sequence=None</em>, <em>synthesized_sequence=None</em>, <em>full_sequence=None</em>, <em>vector=None</em>, <em>description=None</em>, <em>status=None</em>, <em>barcode=None</em>, <em>translation=None</em>, <em>tag_ids=None</em>, <em>collection_ids=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new part using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_plan">
+<code class="descname">create_plan</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>status</em>, <em>operation_id</em>, <em>parent_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new plan using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_plate">
+<code class="descname">create_plate</code><span class="sig-paren">(</span><em>name</em>, <em>container_id</em>, <em>plate_type</em>, <em>plate_form</em>, <em>status</em>, <em>notes</em>, <em>protocol_id=None</em>, <em>well_ids=None</em>, <em>thaw_count=None</em>, <em>height=None</em>, <em>length=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_plate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_plate" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new plate using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_plateset">
+<code class="descname">create_plateset</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>plate_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_plateset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_plateset" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new plateset using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_protocol">
+<code class="descname">create_protocol</code><span class="sig-paren">(</span><em>description</em>, <em>protocol_data=None</em>, <em>schema_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_protocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new protocol using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_robot">
+<code class="descname">create_robot</code><span class="sig-paren">(</span><em>name</em>, <em>robot_id</em>, <em>container_id</em>, <em>notes</em>, <em>server_version</em>, <em>left_mount_id</em>, <em>right_mount_id</em>, <em>robot_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new robot using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_sample">
+<code class="descname">create_sample</code><span class="sig-paren">(</span><em>part_id</em>, <em>well_ids</em>, <em>status=None</em>, <em>evidence=None</em>, <em>outside_collaborator=True</em>, <em>vendor=None</em>, <em>sample_type=None</em>, <em>index_forward=None</em>, <em>index_reverse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new sample using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_schema">
+<code class="descname">create_schema</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>schema=None</em>, <em>schema_version=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_schema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new schema using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.create_tag">
+<code class="descname">create_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.create_tag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.create_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a new tag using the FreeGenes API. Must be superuser
+or staff, and provide required fields in data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>url</em>, <em>headers=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>data is required (typically with a unique id in the url to identify
+the object to delete)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>url</strong> (<em>the url endpoint to query (without the http/s or domain)</em>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_author">
+<code class="descname">delete_author</code><span class="sig-paren">(</span><em>uuid=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_author"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_author" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_collection">
+<code class="descname">delete_collection</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_collection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_compositepart">
+<code class="descname">delete_compositepart</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_compositepart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_compositepart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_container">
+<code class="descname">delete_container</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_container" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_distribution">
+<code class="descname">delete_distribution</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_distribution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_entity">
+<code class="descname">delete_entity</code><span class="sig-paren">(</span><em>name</em>, <em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete an entity with a DELETE request. For all entities,
+we take the uuid, and the name of the delete endpoint.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_institution">
+<code class="descname">delete_institution</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_institution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_institution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_module">
+<code class="descname">delete_module</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_module" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_operation">
+<code class="descname">delete_operation</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_operation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_order">
+<code class="descname">delete_order</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_order" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_organism">
+<code class="descname">delete_organism</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_organism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_organism" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_part">
+<code class="descname">delete_part</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_part" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_plan">
+<code class="descname">delete_plan</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_plan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_plan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_plate">
+<code class="descname">delete_plate</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_plate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_plate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_plateset">
+<code class="descname">delete_plateset</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_plateset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_plateset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_protocol">
+<code class="descname">delete_protocol</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_protocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_protocol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.delete_robot">
+<code class="descname">delete_robot</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.delete_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.delete_robot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="freegenes.main.Client.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>url</em>, <em>headers=None</em>, <em>page=None</em>, <em>paginate=True</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>url</em>, <em>headers=None</em>, <em>paginate=True</em>, <em>limit=1000</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>the default get, will use default headers if custom aren’t defined.
 we take a partial url (e.g., /api/authors) and then add the base.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -191,8 +463,8 @@ we take a partial url (e.g., /api/authors) and then add the base.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>url</strong> (<em>the url endpoint to query (without the http/s or domain)</em>)</li>
 <li><strong>headers</strong> (<em>if defined, don’t use default headers.</em>)</li>
-<li><strong>page</strong> (<em>obtain a specific page of the result.</em>)</li>
 <li><strong>paginate</strong> (<em>obtain all pages after query (default is True)</em>)</li>
+<li><strong>limit</strong> (<em>number of responses per query (default 1000)</em>)</li>
 </ul>
 </td>
 </tr>
@@ -208,6 +480,11 @@ we take a partial url (e.g., /api/authors) and then add the base.</p>
 <dl class="method">
 <dt id="freegenes.main.Client.get_collections">
 <code class="descname">get_collections</code><span class="sig-paren">(</span><em>uuid=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.get_collections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.get_collections" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.get_compositeparts">
+<code class="descname">get_compositeparts</code><span class="sig-paren">(</span><em>uuid=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.get_compositeparts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.get_compositeparts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -288,6 +565,26 @@ we take a partial url (e.g., /api/authors) and then add the base.</p>
 <dt id="freegenes.main.Client.get_robots">
 <code class="descname">get_robots</code><span class="sig-paren">(</span><em>uuid=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.get_robots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.get_robots" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="freegenes.main.Client.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>url</em>, <em>data=None</em>, <em>headers=None</em><span class="sig-paren">)</span><a class="reference internal" href="../modules/freegenes/main.html#Client.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#freegenes.main.Client.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>the default post, will use default headers if custom aren’t defined.
+we take a partial url (e.g., /api/authors) and then add the base.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>url</strong> (<em>the url endpoint to query (without the http/s or domain)</em>)</li>
+<li><strong>data</strong> (<em>data to add to the request.</em>)</li>
+<li><strong>headers</strong> (<em>if defined, don’t use default headers.</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 

@@ -146,6 +146,32 @@ The above works for all of the following:
 > client.get_robots()
 ```
 
+## Delete Endpoints
+
+
+Each of models has a delete function, and it's also required to be staff or 
+superuser user to use it. 
+
+```python
+> client.delete_distributions(uuid)
+> client.delete_collections(uuid)
+> client.delete_compositeparts(uuid)
+> client.delete_institutions(uuid)
+> client.delete_modules(uuid)
+> client.delete_operations(uuid)
+> client.delete_orders(uuid)
+> client.delete_organisms(uuid)
+> client.delete_parts(uuid)
+> client.delete_plans(uuid)
+> client.delete_plates(uuid)
+> client.delete_protocols(uuid)
+> client.delete_robots(uuid)
+```
+
+Note that you are required to provide a unique id for the model 
+to delete. A response with status 204 (no content) indicates success.
+
+
 ## Errors
 
 If you get a bad request, try looking at the json response to determine why:
