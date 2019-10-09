@@ -17,6 +17,7 @@ The client here will eventually be released as "freegenes"
 and the versions here will coincide with these releases.
 
 ## [master](https://github.com/vsoch/freegenes-python/tree/master)
+ - Update and partial update (put, patch) (0.0.16)
  - Adding API function to create (post) (0.0.15)
  - CompositeParts can be circular [#9](https://github.com/vsoch/freegenes-python/issues/9) (0.0.14)
  - CompositePart endpoint (0.0.13)
