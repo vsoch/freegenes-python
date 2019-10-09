@@ -210,6 +210,15 @@
           <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Token </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
         <span class="p">}</span>
 
+    <span class="k">def</span> <span class="nf">_prepare_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;add the given url to a base url, also ensure that it ends in a slash</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fullurl</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+            <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/&quot;</span> <span class="o">%</span> <span class="n">fullurl</span>
+        <span class="k">return</span> <span class="n">fullurl</span>
+
     <span class="k">def</span> <span class="nf">_test_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;test that the token works - this function also ensures</span>
 <span class="sd">           that the base is correct.</span>
@@ -234,7 +243,7 @@
         <span class="n">heads</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span>
 
         <span class="c1"># A second call will already provide a complete url</span>
-        <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">?limit=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">?limit=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">limit</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">):</span>
             <span class="n">fullurl</span> <span class="o">=</span> <span class="n">url</span>
 
@@ -260,8 +269,25 @@
         <span class="n">bot</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error with </span><span class="si">%s</span><span class="s2">, return value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
+<div class="viewcode-block" id="Client.patch"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch">[docs]</a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;a patch request is used for a partial update.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">patch</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="s2">&quot;patch&quot;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Client.post"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;the default post, will use default headers if custom aren&#39;t defined.</span>
+        <span class="sd">&#39;&#39;&#39;a wrapper to create, providing requests.post as the function</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.put"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;a wrapper to create, providing requests.put as the function</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;create&quot;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;create is a base method that can handle a put or post, and</span>
+<span class="sd">           the caller is required to provide a function handle.</span>
+<span class="sd">           Uses default headers if custom aren&#39;t defined.</span>
 <span class="sd">           we take a partial url (e.g., /api/authors) and then add the base.</span>
 
 <span class="sd">           Parameters</span>
@@ -271,25 +297,28 @@
 <span class="sd">           headers: if defined, don&#39;t use default headers.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">heads</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span>
-        <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
 
-        <span class="c1"># Remove empty / None fields from data</span>
+        <span class="c1"># Get the full url, must end in slash</span>
+        <span class="n">fullurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="c1"># Remove empty / None fields from data (not booleans!)</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]}</span>
 
         <span class="c1"># POST indicates create or update, we need at least one field</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;At least one parameter must be provided for a create.&quot;</span><span class="p">)</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;At least one parameter must be provided for a </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">fullurl</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">heads</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">fullurl</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">heads</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># Return a successful response</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">201</span><span class="p">]:</span> 
             <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
-        <span class="n">bot</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error with </span><span class="si">%s</span><span class="s2">, return value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">response</span></div>
-
+        <span class="n">bot</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error with </span><span class="si">%s</span><span class="s2">, return value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> 
+                                                         <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> 
+                                                         <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span>
 
 <div class="viewcode-block" id="Client.delete"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;data is required (typically with a unique id in the url to identify </span>
@@ -300,14 +329,13 @@
 <span class="sd">           url: the url endpoint to query (without the http/s or domain)</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">heads</span> <span class="o">=</span> <span class="n">headers</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span>
-        <span class="n">fullurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="n">fullurl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">fullurl</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">heads</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">204</span><span class="p">]:</span> 
             <span class="n">bot</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error with </span><span class="si">%s</span><span class="s2">, return value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">reason</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">response</span></div>
-
 
 <div class="viewcode-block" id="Client.create_entity"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_entity">[docs]</a>    <span class="k">def</span> <span class="nf">create_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create an entity with a POST request.</span>
@@ -319,6 +347,96 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/</span><span class="si">%s</span><span class="s1">/&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
+
+    <span class="c1"># UPDATE Endpoints</span>
+
+<div class="viewcode-block" id="Client.update_entity"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_entity">[docs]</a>    <span class="k">def</span> <span class="nf">update_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;delete an entity with a DELETE request. For all entities,</span>
+<span class="sd">           we take the uuid, and the name of the delete endpoint.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">uuid</span><span class="p">:</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;A unique id (uuid) is required to update.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;/api/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span></div>
+
+
+    <span class="c1"># PATCH (partial update) Endpoints</span>
+
+<div class="viewcode-block" id="Client.patch_entity"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_entity">[docs]</a>    <span class="k">def</span> <span class="nf">patch_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;A partial update performs a patch, allowing for update of just</span>
+<span class="sd">           a single (or not all required) fields.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;/api/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_author"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_author">[docs]</a>    <span class="k">def</span> <span class="nf">patch_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_collection"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_collection">[docs]</a>    <span class="k">def</span> <span class="nf">patch_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;collections&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_composite_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_composite_part">[docs]</a>    <span class="k">def</span> <span class="nf">patch_composite_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="c1"># The user is allowed to update a composite part based on a new sequence</span>
+        <span class="k">if</span> <span class="s2">&quot;sequence&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+
+            <span class="c1"># [(uuid, direction, start, end),</span>
+            <span class="n">selected_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_derive_parts</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">],</span> <span class="n">circular</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;part_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">selected_parts</span><span class="p">]</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;direction_string&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">selected_parts</span><span class="p">])</span>
+
+        <span class="c1"># If part ids is in data, we also require sequence</span>
+        <span class="k">if</span> <span class="s2">&quot;part_ids&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="s2">&quot;sequence&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;If updating part_ids, a sequence must also be provided.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;compositeparts&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_container"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_container">[docs]</a>    <span class="k">def</span> <span class="nf">patch_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;containers&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_distribution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">patch_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;distributions&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_institution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_institution">[docs]</a>    <span class="k">def</span> <span class="nf">patch_institution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;institutions&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_module"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_module">[docs]</a>    <span class="k">def</span> <span class="nf">patch_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_operation"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_operation">[docs]</a>    <span class="k">def</span> <span class="nf">patch_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;operations&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_order"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_order">[docs]</a>    <span class="k">def</span> <span class="nf">patch_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;orders&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_organism"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_organism">[docs]</a>    <span class="k">def</span> <span class="nf">patch_organism</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;organisms&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_part">[docs]</a>    <span class="k">def</span> <span class="nf">patch_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;parts&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_plan"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_plan">[docs]</a>    <span class="k">def</span> <span class="nf">patch_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;plans&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_plate"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_plate">[docs]</a>    <span class="k">def</span> <span class="nf">patch_plate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;plates&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_plateset"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_plateset">[docs]</a>    <span class="k">def</span> <span class="nf">patch_plateset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;platesets&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_protocol"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">patch_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;protocols&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_robot"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_robot">[docs]</a>    <span class="k">def</span> <span class="nf">patch_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;robots&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_sample"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_sample">[docs]</a>    <span class="k">def</span> <span class="nf">patch_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_schema"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_schema">[docs]</a>    <span class="k">def</span> <span class="nf">patch_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;schemas&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_tag"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.patch_tag">[docs]</a>    <span class="k">def</span> <span class="nf">patch_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_entity</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
     <span class="c1"># DELETE Endpoints</span>
 
 <div class="viewcode-block" id="Client.delete_entity"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_entity">[docs]</a>    <span class="k">def</span> <span class="nf">delete_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
@@ -327,13 +445,13 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;/api/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Client.delete_author"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_author">[docs]</a>    <span class="k">def</span> <span class="nf">delete_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.delete_author"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_author">[docs]</a>    <span class="k">def</span> <span class="nf">delete_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.delete_collection"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_collection">[docs]</a>    <span class="k">def</span> <span class="nf">delete_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;collections&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.delete_compositepart"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_compositepart">[docs]</a>    <span class="k">def</span> <span class="nf">delete_compositepart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.delete_composite_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_composite_part">[docs]</a>    <span class="k">def</span> <span class="nf">delete_composite_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;compositeparts&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.delete_container"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_container">[docs]</a>    <span class="k">def</span> <span class="nf">delete_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
@@ -375,6 +493,16 @@
 <div class="viewcode-block" id="Client.delete_robot"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_robot">[docs]</a>    <span class="k">def</span> <span class="nf">delete_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;robots&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.delete_sample"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_sample">[docs]</a>    <span class="k">def</span> <span class="nf">delete_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_schema"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_schema">[docs]</a>    <span class="k">def</span> <span class="nf">delete_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;schemas&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_tag"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.delete_tag">[docs]</a>    <span class="k">def</span> <span class="nf">delete_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_entity</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+
     <span class="c1"># GET Endpoints</span>
 
 <div class="viewcode-block" id="Client.get_entity"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_entity">[docs]</a>    <span class="k">def</span> <span class="nf">get_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -395,7 +523,7 @@
 <div class="viewcode-block" id="Client.get_collections"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_collections">[docs]</a>    <span class="k">def</span> <span class="nf">get_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;collections&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.get_compositeparts"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_compositeparts">[docs]</a>    <span class="k">def</span> <span class="nf">get_compositeparts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.get_composite_parts"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_composite_parts">[docs]</a>    <span class="k">def</span> <span class="nf">get_composite_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;compositeparts&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_containers"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_containers">[docs]</a>    <span class="k">def</span> <span class="nf">get_containers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -437,9 +565,26 @@
 <div class="viewcode-block" id="Client.get_robots"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_robots">[docs]</a>    <span class="k">def</span> <span class="nf">get_robots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;robots&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
-    <span class="c1"># POST Endpoints (create)</span>
+<div class="viewcode-block" id="Client.get_samples"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_samples">[docs]</a>    <span class="k">def</span> <span class="nf">get_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_author"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_author">[docs]</a>    <span class="k">def</span> <span class="nf">create_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">affiliation</span><span class="p">,</span> <span class="n">orcid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.get_schemas"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_schemas">[docs]</a>    <span class="k">def</span> <span class="nf">get_schemas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;schemas&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_tags"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.get_tags">[docs]</a>    <span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity</span><span class="p">(</span><span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span></div>
+
+
+    <span class="c1"># POST and PUT Endpoints (create and update) require same fields</span>
+
+    <span class="c1"># Authors</span>
+
+<div class="viewcode-block" id="Client.create_author"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_author">[docs]</a>    <span class="k">def</span> <span class="nf">create_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                            <span class="n">email</span><span class="p">,</span> 
+                            <span class="n">affiliation</span><span class="p">,</span> 
+                            <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                            <span class="n">orcid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new author using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -449,10 +594,23 @@
                 <span class="s2">&quot;orcid&quot;</span><span class="p">:</span> <span class="n">orcid</span><span class="p">,</span>
                 <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tag_ids</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;authors&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;authors&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_container"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_container">[docs]</a>    <span class="k">def</span> <span class="nf">create_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span>
-                         <span class="n">estimated_temperature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_author"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_author">[docs]</a>    <span class="k">def</span> <span class="nf">update_author</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">affiliation</span><span class="p">,</span> <span class="n">orcid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_author</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">affiliation</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">orcid</span><span class="p">,</span> <span class="n">tag_ids</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Containers</span>
+
+<div class="viewcode-block" id="Client.create_container"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_container">[docs]</a>    <span class="k">def</span> <span class="nf">create_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                               <span class="n">container_type</span><span class="p">,</span> 
+                               <span class="n">description</span><span class="p">,</span> 
+                               <span class="n">parent_id</span><span class="p">,</span>
+                               <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">estimated_temperature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                               <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new container using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -463,9 +621,23 @@
                 <span class="s2">&quot;estimated_temperature&quot;</span><span class="p">:</span> <span class="n">estimated_temperature</span><span class="p">,</span>
                 <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;containers&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;containers&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_collection"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_collection">[docs]</a>    <span class="k">def</span> <span class="nf">create_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_container"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_container">[docs]</a>    <span class="k">def</span> <span class="nf">update_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span>
+                         <span class="n">estimated_temperature</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_container</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">container_type</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span>
+                                     <span class="n">uuid</span><span class="p">,</span> <span class="n">estimated_temperature</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Collections</span>
+
+<div class="viewcode-block" id="Client.create_collection"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_collection">[docs]</a>    <span class="k">def</span> <span class="nf">create_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                                <span class="n">description</span><span class="p">,</span>
+                                <span class="n">parent_id</span><span class="p">,</span>
+                                <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new collection using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -473,20 +645,45 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
                 <span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="n">parent_id</span><span class="p">,</span>
                 <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tag_ids</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;collections&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;collections&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_collection"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_collection">[docs]</a>    <span class="k">def</span> <span class="nf">update_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">tag_ids</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_distribution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">create_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plateset_ids</span><span class="p">):</span>
+
+    <span class="c1"># Distributions</span>
+
+<div class="viewcode-block" id="Client.create_distribution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">create_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                                  <span class="n">description</span><span class="p">,</span>
+                                  <span class="n">plateset_ids</span><span class="p">,</span> 
+                                  <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new distribution using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
                 <span class="s2">&quot;platesets&quot;</span><span class="p">:</span> <span class="n">plateset_ids</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;distributions&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;distributions&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_distribution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">update_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plateset_ids</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_distribution</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plateset_ids</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_module"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_module">[docs]</a>    <span class="k">def</span> <span class="nf">create_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">model_id</span><span class="p">,</span> <span class="n">module_type</span><span class="p">,</span> <span class="n">module_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># Modules</span>
+
+<div class="viewcode-block" id="Client.create_module"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_module">[docs]</a>    <span class="k">def</span> <span class="nf">create_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                            <span class="n">container_id</span><span class="p">,</span> 
+                            <span class="n">notes</span><span class="p">,</span> 
+                            <span class="n">model_id</span><span class="p">,</span> 
+                            <span class="n">module_type</span><span class="p">,</span>
+                            <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                            <span class="n">module_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new module using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -497,37 +694,70 @@
                 <span class="s2">&quot;module_type&quot;</span><span class="p">:</span> <span class="n">module_type</span><span class="p">,</span>
                 <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">module_data</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;modules&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;modules&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_institution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_institution">[docs]</a>    <span class="k">def</span> <span class="nf">create_institution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">signed_master</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_module"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_module">[docs]</a>    <span class="k">def</span> <span class="nf">update_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">model_id</span><span class="p">,</span> <span class="n">module_type</span><span class="p">,</span> <span class="n">module_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_module</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">model_id</span><span class="p">,</span> <span class="n">module_type</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">module_data</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Institutions</span>
+
+<div class="viewcode-block" id="Client.create_institution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_institution">[docs]</a>    <span class="k">def</span> <span class="nf">create_institution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">signed_master</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new institution using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;signed_master&quot;</span><span class="p">:</span> <span class="n">signed_master</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;institutions&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;institutions&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_institution"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_institution">[docs]</a>    <span class="k">def</span> <span class="nf">update_institution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">signed_master</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_institution</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">signed_master</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_operation"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_operation">[docs]</a>    <span class="k">def</span> <span class="nf">create_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plan_ids</span><span class="p">):</span>
+
+    <span class="c1"># Operations</span>
+
+<div class="viewcode-block" id="Client.create_operation"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_operation">[docs]</a>    <span class="k">def</span> <span class="nf">create_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plan_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new operation using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
                 <span class="s2">&quot;plans&quot;</span><span class="p">:</span> <span class="n">plan_ids</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;operations&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;operations&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_operation"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_operation">[docs]</a>    <span class="k">def</span> <span class="nf">update_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plan_ids</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_operation</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">plan_ids</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_order"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_order">[docs]</a>    <span class="k">def</span> <span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">distribution_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># Orders</span>
+
+<div class="viewcode-block" id="Client.create_order"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_order">[docs]</a>    <span class="k">def</span> <span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distribution_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new order using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
                 <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="n">notes</span><span class="p">,</span>
                 <span class="s2">&quot;distributions&quot;</span><span class="p">:</span> <span class="n">distribution_ids</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;orders&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;orders&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Client.create_organism"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_organism">[docs]</a>    <span class="k">def</span> <span class="nf">create_organism</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">genotype</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_order"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_order">[docs]</a>    <span class="k">def</span> <span class="nf">update_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">distribution_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_order</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">distribution_ids</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Organisms</span>
+
+<div class="viewcode-block" id="Client.create_organism"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_organism">[docs]</a>    <span class="k">def</span> <span class="nf">create_organism</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new organism using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -535,9 +765,22 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
                 <span class="s2">&quot;genotype&quot;</span><span class="p">:</span> <span class="n">genotype</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;organisms&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;organisms&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_plan"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_plan">[docs]</a>    <span class="k">def</span> <span class="nf">create_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">operation_id</span><span class="p">,</span> <span class="n">parent_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_organism"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_organism">[docs]</a>    <span class="k">def</span> <span class="nf">update_organism</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">genotype</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_organism</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Plans</span>
+
+<div class="viewcode-block" id="Client.create_plan"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_plan">[docs]</a>    <span class="k">def</span> <span class="nf">create_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                          <span class="n">description</span><span class="p">,</span>
+                          <span class="n">status</span><span class="p">,</span>
+                          <span class="n">operation_id</span><span class="p">,</span>
+                          <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">parent_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new plan using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -547,14 +790,35 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
                 <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;plans&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;plans&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_plan"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_plan">[docs]</a>    <span class="k">def</span> <span class="nf">update_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">operation_id</span><span class="p">,</span> <span class="n">parent_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_plan</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">operation_id</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">parent_id</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_part">[docs]</a>    <span class="k">def</span> <span class="nf">create_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">gene_id</span><span class="p">,</span> <span class="n">author_id</span><span class="p">,</span> <span class="n">part_type</span><span class="p">,</span> <span class="n">primer_forward</span><span class="p">,</span> <span class="n">primer_reverse</span><span class="p">,</span> 
-                    <span class="n">genbank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">original_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">optimized_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-                    <span class="n">synthesized_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">full_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">barcode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">translation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">collection_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># Parts</span>
+
+<div class="viewcode-block" id="Client.create_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_part">[docs]</a>    <span class="k">def</span> <span class="nf">create_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                          <span class="n">gene_id</span><span class="p">,</span> 
+                          <span class="n">author_id</span><span class="p">,</span> 
+                          <span class="n">part_type</span><span class="p">,</span>
+                          <span class="n">primer_forward</span><span class="p">,</span>
+                          <span class="n">primer_reverse</span><span class="p">,</span> 
+                          <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">genbank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">original_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">optimized_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">synthesized_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">full_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">vector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">barcode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">translation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">collection_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new part using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -577,10 +841,38 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
                 <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;parts&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;parts&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_part">[docs]</a>    <span class="k">def</span> <span class="nf">update_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span>
+                          <span class="n">name</span><span class="p">,</span> 
+                          <span class="n">gene_id</span><span class="p">,</span> 
+                          <span class="n">author_id</span><span class="p">,</span> 
+                          <span class="n">part_type</span><span class="p">,</span>
+                          <span class="n">primer_forward</span><span class="p">,</span>
+                          <span class="n">primer_reverse</span><span class="p">,</span> 
+                          <span class="n">genbank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">original_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">optimized_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">synthesized_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">full_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">vector</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                          <span class="n">barcode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">translation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">tag_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">collection_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_part</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gene_id</span><span class="p">,</span> <span class="n">author_id</span><span class="p">,</span> <span class="n">part_type</span><span class="p">,</span> <span class="n">primer_forward</span><span class="p">,</span> <span class="n">primer_reverse</span><span class="p">,</span> 
+                                <span class="n">uuid</span><span class="p">,</span> <span class="n">genbank</span><span class="p">,</span> <span class="n">original_sequence</span><span class="p">,</span> <span class="n">optimized_sequence</span><span class="p">,</span> <span class="n">synthesized_sequence</span><span class="p">,</span> 
+                                <span class="n">full_sequence</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">barcode</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">tag_ids</span><span class="p">,</span>
+                                <span class="n">collection_ids</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_protocol"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">create_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">protocol_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># Protocols</span>
+
+<div class="viewcode-block" id="Client.create_protocol"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">create_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">protocol_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new protocol using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -588,11 +880,28 @@
                 <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">schema_id</span><span class="p">,</span>
                 <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">protocol_data</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;protocols&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;protocols&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_protocol"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">update_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">protocol_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_protocol</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">protocol_data</span><span class="p">,</span> <span class="n">schema_id</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_plate"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_plate">[docs]</a>    <span class="k">def</span> <span class="nf">create_plate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">plate_type</span><span class="p">,</span> <span class="n">plate_form</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span>
-                     <span class="n">protocol_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">well_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thaw_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># Plates</span>
+
+<div class="viewcode-block" id="Client.create_plate"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_plate">[docs]</a>    <span class="k">def</span> <span class="nf">create_plate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
+                           <span class="n">container_id</span><span class="p">,</span> 
+                           <span class="n">plate_type</span><span class="p">,</span> 
+                           <span class="n">plate_form</span><span class="p">,</span> 
+                           <span class="n">status</span><span class="p">,</span> 
+                           <span class="n">notes</span><span class="p">,</span>
+                           <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">protocol_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">well_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">thaw_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new plate using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -608,10 +917,19 @@
                 <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span>
                 <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">length</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;plates&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;plates&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_plate"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_plate">[docs]</a>    <span class="k">def</span> <span class="nf">update_plate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">plate_type</span><span class="p">,</span> <span class="n">plate_form</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span>
+                     <span class="n">protocol_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">well_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thaw_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_plate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">plate_type</span><span class="p">,</span> <span class="n">plate_form</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span>
+                     <span class="n">protocol_id</span><span class="p">,</span> <span class="n">well_ids</span><span class="p">,</span> <span class="n">thaw_count</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_plateset"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_plateset">[docs]</a>    <span class="k">def</span> <span class="nf">create_plateset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plate_ids</span><span class="p">):</span>
+
+    <span class="c1"># Platesets</span>
+
+<div class="viewcode-block" id="Client.create_plateset"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_plateset">[docs]</a>    <span class="k">def</span> <span class="nf">create_plateset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plate_ids</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new plateset using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -619,11 +937,25 @@
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
                 <span class="s2">&quot;plates&quot;</span><span class="p">:</span> <span class="n">plate_ids</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;platesets&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;platesets&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_plateset"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_plateset">[docs]</a>    <span class="k">def</span> <span class="nf">update_plateset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plate_ids</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_plateset</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">plate_ids</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_robot"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_robot">[docs]</a>    <span class="k">def</span> <span class="nf">create_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">server_version</span><span class="p">,</span>
-                     <span class="n">left_mount_id</span><span class="p">,</span> <span class="n">right_mount_id</span><span class="p">,</span> <span class="n">robot_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># Robots</span>
+
+<div class="viewcode-block" id="Client.create_robot"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_robot">[docs]</a>    <span class="k">def</span> <span class="nf">create_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                           <span class="n">robot_id</span><span class="p">,</span>
+                           <span class="n">container_id</span><span class="p">,</span>
+                           <span class="n">notes</span><span class="p">,</span>
+                           <span class="n">server_version</span><span class="p">,</span>
+                           <span class="n">left_mount_id</span><span class="p">,</span>
+                           <span class="n">right_mount_id</span><span class="p">,</span> 
+                           <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">robot_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new robot using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -636,12 +968,26 @@
                 <span class="s2">&quot;notes&quot;</span><span class="p">:</span> <span class="n">notes</span><span class="p">,</span>
                 <span class="s2">&quot;server_version&quot;</span><span class="p">:</span> <span class="n">server_version</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;robots&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;robots&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.update_robot"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_robot">[docs]</a>    <span class="k">def</span> <span class="nf">update_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">server_version</span><span class="p">,</span> <span class="n">left_mount_id</span><span class="p">,</span> <span class="n">right_mount_id</span><span class="p">,</span> <span class="n">robot_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_robot</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">robot_id</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">notes</span><span class="p">,</span> <span class="n">server_version</span><span class="p">,</span> <span class="n">left_mount_id</span><span class="p">,</span> <span class="n">right_mount_id</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">robot_type</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    
 
-<div class="viewcode-block" id="Client.create_sample"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_sample">[docs]</a>    <span class="k">def</span> <span class="nf">create_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">well_ids</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">evidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">outside_collaborator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">vendor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">index_forward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_reverse</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Samples</span>
+
+<div class="viewcode-block" id="Client.create_sample"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_sample">[docs]</a>    <span class="k">def</span> <span class="nf">create_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span>
+                            <span class="n">well_ids</span><span class="p">,</span>
+                            <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">evidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">outside_collaborator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">vendor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">sample_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">index_forward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">index_reverse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new sample using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -655,11 +1001,25 @@
                 <span class="s2">&quot;index_forward&quot;</span><span class="p">:</span> <span class="n">index_forward</span><span class="p">,</span>
                 <span class="s2">&quot;index_reverse&quot;</span><span class="p">:</span> <span class="n">index_reverse</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;samples&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;samples&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_schema"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_schema">[docs]</a>    <span class="k">def</span> <span class="nf">create_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
-                      <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">schema_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_sample"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_sample">[docs]</a>    <span class="k">def</span> <span class="nf">update_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">well_ids</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">evidence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">outside_collaborator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">vendor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">index_forward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_reverse</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_id</span><span class="p">,</span> <span class="n">well_ids</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">evidence</span><span class="p">,</span>
+                      <span class="n">outside_collaborator</span><span class="p">,</span> <span class="n">vendor</span><span class="p">,</span> <span class="n">sample_type</span><span class="p">,</span>
+                      <span class="n">index_forward</span><span class="p">,</span> <span class="n">index_reverse</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+    <span class="c1"># Schema</span>
+
+
+<div class="viewcode-block" id="Client.create_schema"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_schema">[docs]</a>    <span class="k">def</span> <span class="nf">create_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> 
+                      <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">schema_version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new schema using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -668,23 +1028,39 @@
                 <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
                 <span class="s2">&quot;schema_version&quot;</span><span class="p">:</span> <span class="n">schema_version</span><span class="p">}</span>
 
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;schemas&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;schemas&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.create_tag"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_tag">[docs]</a>    <span class="k">def</span> <span class="nf">create_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.update_schema"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_schema">[docs]</a>    <span class="k">def</span> <span class="nf">update_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_schema</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">schema_version</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Tag</span>
+
+<div class="viewcode-block" id="Client.create_tag"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_tag">[docs]</a>    <span class="k">def</span> <span class="nf">create_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new tag using the FreeGenes API. Must be superuser</span>
 <span class="sd">           or staff, and provide required fields in data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">tag</span><span class="p">})</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">tag</span><span class="p">})</span></div>
 
+<div class="viewcode-block" id="Client.update_tag"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_tag">[docs]</a>    <span class="k">def</span> <span class="nf">update_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    
+    <span class="c1"># Composite Parts</span>
 
 <div class="viewcode-block" id="Client.create_composite_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.create_composite_part">[docs]</a>    <span class="k">def</span> <span class="nf">create_composite_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> 
                                     <span class="n">sequence</span><span class="p">,</span>
+                                    <span class="n">uuid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                     <span class="n">part_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">direction_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">composite_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">composite_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                    <span class="n">composite_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;create a new composite part from a sequence. If no parts are provided,</span>
 <span class="sd">           then we search the provided sequence for all parts in FreeGenes, and</span>
 <span class="sd">           make the association (and derive directions). The data for the parts</span>
@@ -716,7 +1092,22 @@
                 <span class="s2">&quot;composite_id&quot;</span><span class="p">:</span> <span class="n">composite_id</span><span class="p">,</span>
                 <span class="s2">&quot;composite_type&quot;</span><span class="p">:</span> <span class="n">composite_type</span><span class="p">}</span>
        
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;compositeparts&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_entity</span><span class="p">(</span><span class="s2">&quot;compositeparts&quot;</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_entity</span><span class="p">(</span><span class="s2">&quot;compositeparts&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Client.update_composite_part"><a class="viewcode-back" href="../../source/freegenes.main.html#freegenes.main.Client.update_composite_part">[docs]</a>    <span class="k">def</span> <span class="nf">update_composite_part</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span>
+                                    <span class="n">name</span><span class="p">,</span> 
+                                    <span class="n">sequence</span><span class="p">,</span>
+                                    <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">part_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">direction_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">composite_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">composite_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_composite_part</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">circular</span><span class="p">,</span> <span class="n">part_ids</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
+                     <span class="n">direction_string</span><span class="p">,</span> <span class="n">composite_id</span><span class="p">,</span> <span class="n">composite_type</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># Helper and Caching Functions</span>

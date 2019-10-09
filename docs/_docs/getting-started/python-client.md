@@ -133,7 +133,7 @@ The above works for all of the following:
 ```python
 > client.get_distributions()
 > client.get_collections()
-> client.get_compositeparts()
+> client.get_composite_parts()
 > client.get_institutions()
 > client.get_modules()
 > client.get_operations()
@@ -144,6 +144,9 @@ The above works for all of the following:
 > client.get_plates()
 > client.get_protocols()
 > client.get_robots()
+> client.get_samples()
+> client.get_schemas()
+> client.get_tags()
 ```
 
 ## Delete Endpoints
@@ -152,19 +155,22 @@ Each of models has a delete function, and it's also required to be staff or
 superuser user to use it. 
 
 ```python
-> client.delete_distributions(uuid)
-> client.delete_collections(uuid)
-> client.delete_compositeparts(uuid)
-> client.delete_institutions(uuid)
-> client.delete_modules(uuid)
-> client.delete_operations(uuid)
-> client.delete_orders(uuid)
-> client.delete_organisms(uuid)
-> client.delete_parts(uuid)
-> client.delete_plans(uuid)
-> client.delete_plates(uuid)
-> client.delete_protocols(uuid)
-> client.delete_robots(uuid)
+> client.delete_distribution(uuid)
+> client.delete_collection(uuid)
+> client.delete_composite_part(uuid)
+> client.delete_institution(uuid)
+> client.delete_module(uuid)
+> client.delete_operation(uuid)
+> client.delete_order(uuid)
+> client.delete_organism(uuid)
+> client.delete_part(uuid)
+> client.delete_plan(uuid)
+> client.delete_plate(uuid)
+> client.delete_protocol(uuid)
+> client.delete_robot(uuid)
+> client.delete_sample(uuid, data)
+> client.delete_schema(uuid, data)
+> client.delete_tag(uuid, data)
 ```
 
 Note that you are required to provide a unique id for the model 
@@ -179,19 +185,22 @@ want to use the patch functions, which coincide with "PATCH." Patch
 endpoints include:
 
 ```python
-> client.patch_distributions(uuid, data)
-> client.patch_collections(uuid, data)
-> client.patch_compositeparts(uuid, data)
-> client.patch_institutions(uuid, data)
-> client.patch_modules(uuid, data)
-> client.patch_operations(uuid, data)
-> client.patch_orders(uuid, data)
-> client.patch_organisms(uuid, data)
-> client.patch_parts(uuid, data)
-> client.patch_plans(uuid, data)
-> client.patch_plates(uuid, data)
-> client.patch_protocols(uuid, data)
-> client.patch_robots(uuid, data)
+> client.patch_distribution(uuid, data)
+> client.patch_collection(uuid, data)
+> client.patch_composite_part(uuid, data)
+> client.patch_institution(uuid, data)
+> client.patch_module(uuid, data)
+> client.patch_operation(uuid, data)
+> client.patch_order(uuid, data)
+> client.patch_organism(uuid, data)
+> client.patch_part(uuid, data)
+> client.patch_plan(uuid, data)
+> client.patch_plate(uuid, data)
+> client.patch_protocol(uuid, data)
+> client.patch_robot(uuid, data)
+> client.patch_sample(uuid, data)
+> client.patch_schema(uuid, data)
+> client.patch_tag(uuid, data)
 ```
 
 For each function above, "data" should be a dictionary of parameters that you
