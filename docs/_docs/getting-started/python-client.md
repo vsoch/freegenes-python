@@ -148,7 +148,6 @@ The above works for all of the following:
 
 ## Delete Endpoints
 
-
 Each of models has a delete function, and it's also required to be staff or 
 superuser user to use it. 
 
@@ -172,6 +171,33 @@ Note that you are required to provide a unique id for the model
 to delete. A response with status 204 (no content) indicates success.
 
 
+## Update and Patch Endpoints
+
+An update coincides with "POST" and requires that you provide all of the model's
+required fields. If you want to update only a substet of fields, then you
+want to use the patch functions, which coincide with "PATCH." Patch
+endpoints include:
+
+```python
+> client.patch_distributions(uuid, data)
+> client.patch_collections(uuid, data)
+> client.patch_compositeparts(uuid, data)
+> client.patch_institutions(uuid, data)
+> client.patch_modules(uuid, data)
+> client.patch_operations(uuid, data)
+> client.patch_orders(uuid, data)
+> client.patch_organisms(uuid, data)
+> client.patch_parts(uuid, data)
+> client.patch_plans(uuid, data)
+> client.patch_plates(uuid, data)
+> client.patch_protocols(uuid, data)
+> client.patch_robots(uuid, data)
+```
+
+For each function above, "data" should be a dictionary of parameters that you
+want to update.  See the examples below for how to use patch.
+
+
 ## Errors
 
 If you get a bad request, try looking at the json response to determine why:
@@ -193,7 +219,7 @@ and typically results because you need to be staff or superuser to
 use endpoints that modify data.
 
 
-## Post (create) Endpoints
+## Examples
 
 ### Create an Author
 
@@ -214,6 +240,22 @@ although it's not required.
 > author
 {'uuid': 'e246f6bb-5cc4-4cc3-bd41-73d24567c0f4',
  'name': 'Big Bird',
+ 'email': 'yellowisgreat@bird.dev',
+ 'affiliation': 'Sesame Street',
+ 'orcid': None,
+ 'tags': [],
+ 'label': 'author'}
+```
+
+### Update an Author
+
+Oh no, we make a mistake! Let's update the author we just made. Since we don't
+want to provide all fields, we are going to use patch.
+
+```python
+author = client.patch_author(uuid=author['uuid'], data={"name": "Notsobig Bird"})
+{'uuid': 'f176b56a-bd27-42d5-8867-0d53f09e54e3',
+ 'name': 'Notsobig Bird',
  'email': 'yellowisgreat@bird.dev',
  'affiliation': 'Sesame Street',
  'orcid': None,
@@ -252,6 +294,27 @@ a parent id. Here is the created container:
  'label': 'container'}
 ```
 
+### Update a Container
+
+Let's update the container above.
+
+```python
+container = client.patch_container(uuid=container['uuid'], data={'name': 'Marker Box'})
+{'uuid': '6f39b0ae-ca9c-4b7c-8d71-071283349852',
+ 'time_created': '2019-10-09T09:38:30.590297-05:00',
+ 'time_updated': '2019-10-09T09:39:14.051493-05:00',
+ 'name': 'Marker Box',
+ 'container_type': 'trash',
+ 'description': 'This is a crayon trash box?',
+ 'estimated_temperature': None,
+ 'x': None,
+ 'y': None,
+ 'z': None,
+ 'parent': '763221b0-8bdd-4b23-8da0-95eedce877ba',
+ 'plates': [],
+ 'label': 'container'}
+```
+
 ### Create a Distribution
 
 A distribution requires a name and description
@@ -279,16 +342,32 @@ Here is the created distribution:
 
 Note that you can provide a list of plateset ids, or a single id for platesets.
 
+### Update a Distribution
+
+Update the distribution as follows:
+
+```python
+dist = client.patch_distribution(uuid=dist['uuid'], data={"name": "Send in the hounds"})
+{'uuid': '418f1e66-7f3b-46cf-b707-40bad407f202',
+ 'time_created': '2019-10-06T11:53:20.121227-05:00',
+ 'time_updated': '2019-10-06T11:53:20.121277-05:00',
+ 'name': 'Send in the hounds',
+ 'description': 'So many hounds',
+ 'platesets': ['37d895e3-eaf1-48f5-ad3d-9a7571e4434c'],
+ 'label': 'distribution'}
+```
+
 
 ### Create a Collection
 
-A collection requires a name and description:
+A collection requires a name and description, and a parent_id is required.
 
 ```python
 name="dinosaur-collection"                                                                                  
-description="This is the description"                                                                       
+description="This is the description"
+parent_id = '763221b0-8bdd-4b23-8da0-95eedce877ba'                      
 
-collection = client.create_collection(name=name, description=description)
+collection = client.create_collection(name=name, description=description, parent_id=parent_id)
 ```
 
 If you are superuser or admin, the created collection will be returned.
@@ -307,6 +386,22 @@ If you are superuser or admin, the created collection will be returned.
 You can also provide a parent collection id with `parent_id` or a list of
 tag ids with "tag_ids".
 
+
+### Update a Collection
+
+To update a collection:
+
+```python
+collection = client.patch_collection(uuid=collection['uuid'], data={"name": "avocado-collection"})
+{'uuid': 'ec624409-26cb-4882-969e-f0d7c1c1aa44',
+ 'time_created': '2019-10-06T10:01:36.935007-05:00',
+ 'time_updated': '2019-10-06T10:01:36.935073-05:00',
+ 'name': 'avocado-collection',
+ 'description': 'This is the description',
+ 'parent': None,
+ 'tags': [],
+ 'label': 'collection'}
+```
 
 ### Create a Module
 
@@ -339,6 +434,29 @@ A successful response looks like the following:
  'label': 'module'}
 ```
 
+### Update a Module
+
+To update a module:
+
+```python
+module = client.patch_module(uuid=module['uuid'], data={"name": "Avocado Module"})
+```
+
+```python
+> module
+{'uuid': '1b46bb05-09c9-401c-9f32-b1a17240a3ba',
+ 'time_created': '2019-10-06T11:34:26.698264-05:00',
+ 'time_updated': '2019-10-06T11:34:26.698314-05:00',
+ 'name': 'Avocado Module',
+ 'container': '1ca52bd5-05e6-4f4f-913b-6760bed611f2',
+ 'notes': 'This is a module for dinosaurs.',
+ 'model_id': 'dino-raptor-3000',
+ 'module_type': 'pipette',
+ 'data': {},
+ 'label': 'module'}
+```
+
+
 ### Create an Institution
 
 An institution only required a name, and a boolean to indicate if they have
@@ -360,9 +478,20 @@ A successful response looks like the following:
  'label': 'institution'}
 ```
 
+### Update an Institution
+
+```python
+institution = client.patch_institution(uuid=institution['uuid'], data={"name": "Lizard School"})
+{'uuid': 'cf7176db-38ef-4188-8f99-27458da7558a',
+ 'name': 'Lizard School',
+ 'signed_master': True,
+ 'label': 'institution'}
+```
+
+
 ### Create an Operation
 
-An operation only requires a name and description.
+An operation requires a name and description.
 
 ```python
 name = "Operation Neptune"
@@ -372,7 +501,6 @@ operation = client.create_operation(name=name, description=description)
 ```
 
 A successful operation looks like the following:
-
 
 ```python
 > operation
@@ -387,6 +515,12 @@ A successful operation looks like the following:
 ```
 
 Note that you can also provide a list of `plan_ids` to select plans.
+
+### Update an Operation
+
+```python
+operation = client.patch_operation(uuid=operation['uuid'], data={"name": "Operation Venus"})
+```
 
 
 ### Create an Order
@@ -416,6 +550,12 @@ A successful response looks like the following:
 You can also provide `distribution_ids` to add one or more distributions to
 the order (a list).
 
+### Update an Order
+
+```python
+order = client.patch_order(uuid=order['uuid'], data={'notes': 'Extra avocado AND beans'})
+```
+
 ### Create an Organism
 
 An organism requires a name, description, and genotype.
@@ -440,6 +580,13 @@ Here is a successful response:
  'genotype': 'Gaaattaagaataata',
  'label': 'organism'}
 ```
+
+### Update an Organism
+
+```python
+organism = client.patch_organism(uuid=organism['uuid'], data={"description": "An extinct dinosaur"})
+```
+
 
 ### Create a Part
 
@@ -485,6 +632,12 @@ A successful response looks like the following:
  'tags': [],
  'collections': [],
  'author': 'c9d9237b-c4f7-48a9-9ac1-33c2393cfbf1'}
+```
+
+### Update a Part
+
+```python
+part = client.patch_part(uuid=part['uuid'], data={'name': 'Thimble'})
 ```
 
 ### Create Composite Part
@@ -545,6 +698,16 @@ request to the server to create the Composite Part. If the create or update is s
 See [this original issue](https://github.com/vsoch/freegenes/issues/63) for discussion
 about this endpoint function.
 
+### Update a Composite Part
+
+This is the one slightly different patch function, because if you provide a sequence
+it will calculate updated parts, and if you provide just parts, you are also required to
+provide the corresponding sequence. The circular argument is also provided as a boolean.
+
+```python
+composite_part = client.patch_composite_part(uuid=composite_part['uuid'], data={'sequence': sequence}, circular=False)
+```
+
 ### Create a Plan
 
 ```python
@@ -572,6 +735,12 @@ The successful response looks like the following:
 ```
 
 Note you can also provide a `parent_id`  if relevant.
+
+### Update a Plan
+
+```python
+plan = client.patch_plan(uuid=plan['uuid'], data={"name": "Austin Power's Plan"})
+```
 
 ### Create a Plate
 
@@ -612,6 +781,12 @@ Here is the created object:
  'label': 'plate'}
 ```
 
+### Update a Plate
+
+```python
+plate = client.patch_plate(uuid=plate['uuid'], data={"notes": "Asparagus"})
+```
+
 ### Create a PlateSet
 
 You are required to provide one or more plates to create a plateset.
@@ -635,6 +810,12 @@ The created object is shown below.
  'time_updated': '2019-10-06T12:59:11.632245-05:00',
  'plates': ['8463b8b7-3726-4919-8dac-e8f71c445280'],
  'label': 'plateset'}
+```
+
+### Update a PlateSet
+
+```python
+plateset = client.patch_plateset(uuid=plateset['uuid'], data={"name": "Your Plates"})
 ```
 
 ### Create a Sample
@@ -670,6 +851,12 @@ Here is a successful response:
   '565ab16f-4fb0-45ec-a296-a620a5cd0d24']}
 ```
 
+### Update a Sample
+
+```python
+sample = client.patch_sample(uuid=sample['uuid'], data={"vendor": "Meatball"})
+```
+
 ### Create a Protocol
 
 You only are required to add a description for a protocol.
@@ -692,6 +879,12 @@ or a schema with `schema_id`. Here is a response from the above:
  'description': 'What is a Protocol, Protocol',
  'label': 'protocol',
  'schema': None}
+```
+
+### Update a Protocol
+
+```python
+protocol = client.patch_protocol(uuid=protocol['uuid'], data={'description': 'Over there!'})
 ```
 
 ### Create a Robot
@@ -730,6 +923,11 @@ You can also provide an optional `robot_type`. Here is the successful response:
  'label': 'robot'}
 ```
 
+### Update a Robot
+
+```python
+robot = client.patch_robot(uuid=robot['uuid'], data={"name": "TVBot"})
+```
 
 ### Create a Schema
 
@@ -742,6 +940,7 @@ schema_version = "1.0.0"
 
 schema = client.create_schema(name=name, description=description, schema_version=schema_version)
 ```
+
 Here is the successful response:
 
 ```python
@@ -756,6 +955,12 @@ Here is the successful response:
  'label': 'schema'}
 ```
 
+### Update a Schema
+
+```python
+schema = client.patch_schema(uuid=schema['uuid'], data={'description': "This is not a schema for a robot"})
+```
+
 ### Create a Tag
 
 Creating a tag simply requires a tag!
@@ -767,4 +972,10 @@ tag = client.create_tag(tag="bogey")
 {'uuid': 'd600c0f6-9ff8-4e3b-9c27-07f5476f54be',
  'tag': 'bogey',
  'label': 'tag'}
+```
+
+### Update a Tag
+
+```python
+tag = client.patch_tag(uuid=tag['uuid'], data={'tag': 'down-now'})
 ```
