@@ -1,5 +1,7 @@
 # FreeGenes Python
 
+[![DOI](https://zenodo.org/badge/203202406.svg)](https://zenodo.org/badge/latestdoi/203202406)
+
 FreeGenes Python (freegenes) is the Python API for working with <a href="https://www.github.com/vsoch/freegenes" target="_blank">FreeGenes</a>. See
 the [documentation](https://vsoch.github.io/freegenes) for installation and usage. The package
 will be released on [pypi](https://pypi.org/project/freegenes/) and eventually conda.
